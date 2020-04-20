@@ -28,6 +28,10 @@
         {
           "member": "F154868",
           "role": "MANAGER"
+        },
+        {
+          "member": "O158190",
+          "role": "MANAGER"
         }
       ],
       "numPartitions": 3,
@@ -60,6 +64,10 @@
         },
         {
           "member": "F154868",
+          "role": "MANAGER"
+        },
+        {
+          "member": "O158190",
           "role": "MANAGER"
         }
       ],
@@ -94,6 +102,10 @@
         {
           "member": "F154868",
           "role": "MANAGER"
+        },
+        {
+          "member": "O158190",
+          "role": "MANAGER"
         }
       ],
       "numPartitions": 3,
@@ -123,6 +135,10 @@
         },
         {
           "member": "F154868",
+          "role": "MANAGER"
+        },
+        {
+          "member": "O158190",
           "role": "MANAGER"
         }
       ],
