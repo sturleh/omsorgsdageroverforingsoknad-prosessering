@@ -11,6 +11,7 @@ Filtrerer på version 2 i metadata
 - Oppretter Journalpost
 - Oppretter Gosys Oppgave
 - Sletter mellomlagrede dokumenter
+- Legger søknaden på topic `privat-overfore-omsorgsdager-soknad-journalfort` som k9-fordel leser av
 
 ## Feil i prosessering
 Ved feil i en av streamene som håndterer prosesseringen vil streamen stoppe, og tjenesten gi 503 response på liveness etter 15 minutter.
