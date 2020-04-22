@@ -2,7 +2,6 @@ package no.nav.helse.prosessering.v1.asynkron.overforeDager
 
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
-import no.nav.helse.deserialiserTilPreprossesertOverforeDagerV1
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
@@ -14,7 +13,6 @@ import no.nav.helse.prosessering.v1.asynkron.Topics
 import no.nav.helse.prosessering.v1.asynkron.process
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertSøker
-import no.nav.helse.serialiserTilData
 import no.nav.k9.søknad.felles.Barn
 import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker

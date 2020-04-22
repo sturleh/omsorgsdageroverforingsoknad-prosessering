@@ -1,14 +1,14 @@
 package no.nav.helse.prosessering.v1.asynkron.overforeDager
 
-import no.nav.helse.deserialiserTilSøknadOverføreDagerV1
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
 import no.nav.helse.prosessering.v1.PreprosseseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.Topics
+import no.nav.helse.prosessering.v1.asynkron.deserialiserTilSøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.asynkron.process
-import no.nav.helse.serialiserTilData
+import no.nav.helse.prosessering.v1.asynkron.serialiserTilData
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
