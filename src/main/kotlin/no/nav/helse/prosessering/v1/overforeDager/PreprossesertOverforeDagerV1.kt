@@ -55,5 +55,10 @@ data class PreprossesertSøker(
         etternavn = søker.etternavn,
         aktørId = aktørId.id
     )
+
+    override fun toString(): String {
+        return "Soker(fornavn='$fornavn', mellomnavn=$mellomnavn, etternavn='$etternavn', aktørId='$aktørId')"
+    }
+
 }
 
