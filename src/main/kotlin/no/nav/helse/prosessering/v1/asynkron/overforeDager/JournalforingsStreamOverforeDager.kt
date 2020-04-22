@@ -56,7 +56,7 @@ internal class JournalforingsStreamOverforeDager(
                     fraPreprossesertV1.name,
                     Consumed.with(fraPreprossesertV1.keySerde, fraPreprossesertV1.valueSerde)
                 )
-                .filter { _, entry -> 1 == entry.metadata.version }
+                .filter { _, entry -> 2 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
 

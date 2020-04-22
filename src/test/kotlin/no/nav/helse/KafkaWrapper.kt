@@ -110,7 +110,7 @@ fun KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>.leggTilMottak(sok
             soknad.søknadId,
             TopicEntry(
                 metadata = Metadata(
-                    version = 1,
+                    version = 2,
                     correlationId = UUID.randomUUID().toString(),
                     requestId = UUID.randomUUID().toString()
                 ),

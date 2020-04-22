@@ -55,8 +55,6 @@ spec:
       value: https://tps-proxy-q1.nais.preprod.local/api/v1
     - name: NAIS_STS_DISCOVERY_ENDPOINT
       value: https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration
-    - name: AZURE_CLIENT_ID
-      value: 3c90567a-a7e9-4f6f-8f76-fd3a2abd2cad
     - name: AZURE_V2_DISCOVERY_ENDPOINT
       value: https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/v2.0/.well-known/openid-configuration
     - name: LAGRE_DOKUMENT_SCOPES

@@ -37,12 +37,12 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
 
-private val logger: Logger = LoggerFactory.getLogger("nav.OmsorgspengesoknadProsessering") //TODO: Endre navn
+private val logger: Logger = LoggerFactory.getLogger("nav.OmsorgsdageroverforingsoknadProsessering")
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @KtorExperimentalAPI
-fun Application.omsorgsdageroverforingsoknadProsessering() { //TODO: Endre navn
+fun Application.omsorgsdageroverforingsoknadProsessering() {
     logProxyProperties()
     DefaultExports.initialize()
 

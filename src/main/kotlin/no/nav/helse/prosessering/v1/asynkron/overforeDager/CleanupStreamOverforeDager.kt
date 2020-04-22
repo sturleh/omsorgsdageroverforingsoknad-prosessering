@@ -45,7 +45,7 @@ internal class CleanupStreamOverforeDager(
                 .stream<String, TopicEntry<CleanupOverforeDager>>(
                     fraCleanup.name, Consumed.with(fraCleanup.keySerde, fraCleanup.valueSerde)
                 )
-                .filter { _, entry -> 1 == entry.metadata.version }
+                .filter { _, entry -> 2 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         logger.info("Sletter overfore dager dokumenter.")

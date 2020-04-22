@@ -55,8 +55,6 @@ spec:
       value: https://tps-proxy.nais.adeo.no/api/v1
     - name: NAIS_STS_DISCOVERY_ENDPOINT
       value: https://security-token-service.nais.adeo.no/rest/v1/sts/.well-known/openid-configuration
-    - name: AZURE_CLIENT_ID
-      value: 84ef0905-64b3-440b-8f6a-0d88ef81a0f0 #TODO: Endre til riktig id når poden blir prodsatt
     - name: AZURE_V2_DISCOVERY_ENDPOINT
       value: https://login.microsoftonline.com/62366534-1ec3-4962-8869-9b5535279d0b/v2.0/.well-known/openid-configuration
     - name: LAGRE_DOKUMENT_SCOPES

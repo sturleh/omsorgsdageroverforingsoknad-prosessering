@@ -45,7 +45,7 @@ internal class PreprosseseringStreamOverforeDager(
                             fromMottatt.name,
                             Consumed.with(fromMottatt.keySerde, fromMottatt.valueSerde)
                     )
-                    .filter { _, entry -> 1 == entry.metadata.version }
+                    .filter { _, entry -> 2 == entry.metadata.version }
                     .mapValues { soknadId, entry ->
                         process(NAME, soknadId, entry) {
                             logger.info("Preprosesserer søknad for overføring av dager.")
