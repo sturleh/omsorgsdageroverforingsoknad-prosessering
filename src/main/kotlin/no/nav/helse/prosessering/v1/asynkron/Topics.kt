@@ -13,11 +13,11 @@ import org.json.JSONObject
 
 internal data class Topic(
     val name: String,
-    val serDes: TopicEntrySerDes
+    val serDes: SerDes
 ) {
     val keySerializer = StringSerializer()
     private val keySerde = Serdes.String()
-    private val valueSerde = Serdes.serdeFrom(TopicEntrySerDes(), TopicEntrySerDes())
+    private val valueSerde = Serdes.serdeFrom(SerDes(), SerDes())
     val consumed = Consumed.with(keySerde, valueSerde)
     val produced = Produced.with(keySerde, valueSerde)
 }
@@ -25,28 +25,28 @@ internal data class Topic(
 internal object Topics {
     val MOTTATT_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-mottatt",
-        serDes = TopicEntrySerDes()
+        serDes = SerDes()
     )
 
     val PREPROSSESERT_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-preprossesert",
-        serDes = TopicEntrySerDes()
+        serDes = SerDes()
     )
 
 
     val CLEANUP_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-cleanup",
-        serDes = TopicEntrySerDes()
+        serDes = SerDes()
     )
 
     val JOURNALFORT_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-journalfort",
-        serDes = TopicEntrySerDes()
+        serDes = SerDes()
     )
 }
 
 data class Data(val rawJson: String)
-data class TopicEntryJson(val rawJson: String) {
+data class TopicEntry(val rawJson: String) {
     constructor(metadata: Metadata, data: Data) : this(
         JSONObject(
             mapOf(
@@ -81,9 +81,9 @@ data class CleanupOverforeDager(
 
 data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
 
-class TopicEntrySerDes : Serializer<TopicEntryJson>, Deserializer<TopicEntryJson> {
+class SerDes : Serializer<TopicEntry>, Deserializer<TopicEntry> {
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
     override fun close() {}
-    override fun serialize(topic: String, entry: TopicEntryJson): ByteArray = entry.rawJson.toByteArray()
-    override fun deserialize(topic: String, entry: ByteArray): TopicEntryJson = TopicEntryJson(String(entry))
+    override fun serialize(topic: String, entry: TopicEntry): ByteArray = entry.rawJson.toByteArray()
+    override fun deserialize(topic: String, entry: ByteArray): TopicEntry = TopicEntry(String(entry))
 }

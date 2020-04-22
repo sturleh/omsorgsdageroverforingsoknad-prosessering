@@ -38,13 +38,12 @@ import no.nav.helse.prosessering.v1.PreprosseseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.AsynkronProsesseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.CleanupOverforeDager
 import no.nav.helse.prosessering.v1.asynkron.Data
-import no.nav.helse.prosessering.v1.asynkron.TopicEntryJson
+import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
-import java.nio.charset.Charset
 
 private val logger: Logger = LoggerFactory.getLogger("nav.OmsorgsdageroverforingsoknadProsessering")
 
@@ -141,9 +140,9 @@ fun omsorgsdageroverførningKonfigurertMapper(): ObjectMapper {
 }
 
 private fun Url.Companion.healthURL(baseUrl: URI) = Url.buildURL(baseUrl = baseUrl, pathParts = listOf("health"))
-internal fun TopicEntryJson.deserialiserTilSøknadOverføreDagerV1(): SøknadOverføreDagerV1 = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
-internal fun TopicEntryJson.deserialiserTilPreprossesertOverforeDagerV1():PreprossesertOverforeDagerV1  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
-internal fun TopicEntryJson.deserialiserTilCleanupOverforeDager():CleanupOverforeDager  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
+internal fun TopicEntry.deserialiserTilSøknadOverføreDagerV1(): SøknadOverføreDagerV1 = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
+internal fun TopicEntry.deserialiserTilPreprossesertOverforeDagerV1():PreprossesertOverforeDagerV1  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
+internal fun TopicEntry.deserialiserTilCleanupOverforeDager():CleanupOverforeDager  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
 
 
 internal fun Any.serialiserTilData() = Data(omsorgsdageroverførningKonfigurertMapper().writeValueAsString(this))

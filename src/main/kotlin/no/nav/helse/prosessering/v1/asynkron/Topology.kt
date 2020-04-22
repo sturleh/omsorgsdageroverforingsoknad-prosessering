@@ -19,8 +19,8 @@ private object StreamCounter {
 internal fun process(
     name: String,
     soknadId: String,
-    entry: TopicEntryJson,
-    block: suspend() -> Data) : TopicEntryJson {
+    entry: TopicEntry,
+    block: suspend() -> Data) : TopicEntry {
     return runBlocking(MDCContext(mapOf(
         "correlation_id" to entry.metadata.correlationId,
         "request_id" to entry.metadata.requestId,
@@ -37,7 +37,7 @@ internal fun process(
             throw cause
         }
         StreamCounter.ok(name)
-        TopicEntryJson(
+        TopicEntry(
             metadata = entry.metadata,
             data = processed
         )
