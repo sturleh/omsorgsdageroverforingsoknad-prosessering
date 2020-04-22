@@ -37,7 +37,7 @@ object TestConfiguration {
 
         if (wireMockServer != null) {
             map["nav.auth.clients.1.alias"] = "azure-v2"
-            map["nav.auth.clients.1.client_id"] = "omsorgspengesoknad-prosessering"
+            map["nav.auth.clients.1.client_id"] = "omsorgsdageroverforingsoknad-prosessering"
             map["nav.auth.clients.1.private_key_jwk"] = ClientCredentials.ClientA.privateKeyJwk
             map["nav.auth.clients.1.discovery_endpoint"] = wireMockServer.getAzureV2WellKnownUrl()
             map["nav.auth.scopes.lagre-dokument"] = "k9-dokument/.default"

@@ -31,12 +31,12 @@ import kotlin.test.assertEquals
 
 
 @KtorExperimentalAPI
-class OmsorgspengesoknadProsesseringTest {
+class OmsorgsdageroverforingsoknadProsesseringTest {
 
     @KtorExperimentalAPI
     private companion object {
 
-        private val logger: Logger = LoggerFactory.getLogger(OmsorgspengesoknadProsesseringTest::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(OmsorgsdageroverforingsoknadProsesseringTest::class.java)
 
         private val wireMockServer: WireMockServer = WireMockBuilder()
             .withNaisStsSupport()
