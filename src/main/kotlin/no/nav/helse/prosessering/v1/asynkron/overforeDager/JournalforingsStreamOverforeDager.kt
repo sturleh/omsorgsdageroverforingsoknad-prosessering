@@ -2,6 +2,7 @@ package no.nav.helse.prosessering.v1.asynkron.overforeDager
 
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
+import no.nav.helse.deserialiserTilPreprossesertOverforeDagerV1
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
@@ -9,11 +10,11 @@ import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.asynkron.*
-import no.nav.helse.prosessering.v1.asynkron.Topic
 import no.nav.helse.prosessering.v1.asynkron.Topics
 import no.nav.helse.prosessering.v1.asynkron.process
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertSøker
+import no.nav.helse.serialiserTilData
 import no.nav.k9.søknad.felles.Barn
 import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker
@@ -22,10 +23,7 @@ import no.nav.k9.søknad.omsorgspenger.overføring.Mottaker
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
-import java.time.ZonedDateTime
 
 internal class JournalforingsStreamOverforeDager(
     joarkGateway: JoarkGateway,
@@ -48,24 +46,23 @@ internal class JournalforingsStreamOverforeDager(
 
         private fun topology(joarkGateway: JoarkGateway): Topology {
             val builder = StreamsBuilder()
-            val fraPreprossesertV1: Topic<TopicEntry<PreprossesertOverforeDagerV1>> = Topics.PREPROSSESERT_OVERFOREDAGER
-            val tilCleanup: Topic<TopicEntry<CleanupOverforeDager>> = Topics.CLEANUP_OVERFOREDAGER
+            val fraPreprossesertV1 = Topics.PREPROSSESERT_OVERFOREDAGER
+            val tilCleanup = Topics.CLEANUP_OVERFOREDAGER
 
             val mapValues = builder
-                .stream<String, TopicEntry<PreprossesertOverforeDagerV1>>(
-                    fraPreprossesertV1.name,
-                    Consumed.with(fraPreprossesertV1.keySerde, fraPreprossesertV1.valueSerde)
-                )
+                .stream(fraPreprossesertV1.name, fraPreprossesertV1.consumed)
                 .filter { _, entry -> 2 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
+                        val preprosessertMelding =
+                            entry.deserialiserTilPreprossesertOverforeDagerV1()
 
-                        val dokumenter = entry.data.dokumentUrls
+                        val dokumenter = preprosessertMelding.dokumentUrls
                         logger.info("Journalfører overføre dager dokumenter: {}", dokumenter)
                         val journaPostId = joarkGateway.journalførOverforeDager(
-                            mottatt = entry.data.mottatt,
-                            aktørId = AktørId(entry.data.søker.aktørId),
-                            norskIdent = entry.data.søker.fødselsnummer,
+                            mottatt = preprosessertMelding.mottatt,
+                            aktørId = AktørId(preprosessertMelding.søker.aktørId),
+                            norskIdent = preprosessertMelding.søker.fødselsnummer,
                             correlationId = CorrelationId(entry.metadata.correlationId),
                             dokumenter = dokumenter
                         )
@@ -73,18 +70,18 @@ internal class JournalforingsStreamOverforeDager(
 
                         val journalfort = JournalfortOverforeDager(
                             journalpostId = journaPostId.journalpostId,
-                                søknad = entry.data.tilK9OmsorgspengerOverføringSøknad()
+                                søknad = preprosessertMelding.tilK9OmsorgspengerOverføringSøknad()
                             )
 
                         CleanupOverforeDager(
                             metadata = entry.metadata,
-                            meldingV1 = entry.data,
+                            meldingV1 = preprosessertMelding,
                             journalførtMelding = journalfort
-                        )
+                        ).serialiserTilData()
                     }
                 }
             mapValues
-                .to(tilCleanup.name, Produced.with(tilCleanup.keySerde, tilCleanup.valueSerde))
+                .to(tilCleanup.name, tilCleanup.produced)
             return builder.build()
         }
     }

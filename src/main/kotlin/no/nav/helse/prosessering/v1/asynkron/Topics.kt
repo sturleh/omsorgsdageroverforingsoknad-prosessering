@@ -1,96 +1,89 @@
 package no.nav.helse.prosessering.v1.asynkron
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
-import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
-import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.Serializer
 import org.apache.kafka.common.serialization.StringSerializer
+import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.Produced
+import org.json.JSONObject
 
-data class TopicEntry<V>(val metadata: Metadata, val data: V)
-
-data class CleanupOverforeDager(val metadata: Metadata, val meldingV1: PreprossesertOverforeDagerV1, val journalførtMelding: JournalfortOverforeDager)
-
-data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
-
-internal data class Topic<V>(
+internal data class Topic(
     val name: String,
-    val serDes : SerDes<V>
+    val serDes: TopicEntrySerDes
 ) {
     val keySerializer = StringSerializer()
-    val keySerde = Serdes.String()
-    val valueSerde = Serdes.serdeFrom(serDes, serDes)
+    private val keySerde = Serdes.String()
+    private val valueSerde = Serdes.serdeFrom(TopicEntrySerDes(), TopicEntrySerDes())
+    val consumed = Consumed.with(keySerde, valueSerde)
+    val produced = Produced.with(keySerde, valueSerde)
 }
 
 internal object Topics {
     val MOTTATT_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-mottatt",
-        serDes = MottattSoknadSerDesOverforeDager()
+        serDes = TopicEntrySerDes()
     )
+
     val PREPROSSESERT_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-preprossesert",
-        serDes = PreprossesertSerDesOverforeDager()
+        serDes = TopicEntrySerDes()
     )
+
+
     val CLEANUP_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-cleanup",
-        serDes = CleanupSerDesOverforeDager()
+        serDes = TopicEntrySerDes()
     )
+
     val JOURNALFORT_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-journalfort",
-        serDes = JournalfortSerDesOverforeDager()
+        serDes = TopicEntrySerDes()
     )
 }
 
-internal abstract class SerDes<V> : Serializer<V>, Deserializer<V> {
-    protected val objectMapper = jacksonObjectMapper()
-        .dusseldorfConfigured()
-        .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
-        .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
-    override fun serialize(topic: String?, data: V): ByteArray? {
-        return data?.let {
-            objectMapper.writeValueAsBytes(it)
-        }
-    }
+data class Data(val rawJson: String)
+data class TopicEntryJson(val rawJson: String) {
+    constructor(metadata: Metadata, data: Data) : this(
+        JSONObject(
+            mapOf(
+                "metadata" to JSONObject(
+                    mapOf(
+                        "versjon" to metadata.version,
+                        "correlationId" to metadata.correlationId,
+                        "requestId" to metadata.requestId
+                    )
+                ),
+                "data" to JSONObject(data.rawJson)
+            )
+        ).toString()
+    )
+
+    private val entityJson = JSONObject(rawJson)
+    private val metadataJson = requireNotNull(entityJson.getJSONObject("metadata"))
+    private val dataJson = requireNotNull(entityJson.getJSONObject("data"))
+    val metadata = Metadata(
+        version = requireNotNull(metadataJson.getInt("versjon")),
+        correlationId = requireNotNull(metadataJson.getString("correlationId")),
+        requestId = requireNotNull(metadataJson.getString("requestId"))
+    )
+    val data = Data(dataJson.toString())
+}
+
+data class CleanupOverforeDager(
+    val metadata: Metadata,
+    val meldingV1: PreprossesertOverforeDagerV1,
+    val journalførtMelding: JournalfortOverforeDager
+)
+
+data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
+
+class TopicEntrySerDes : Serializer<TopicEntryJson>, Deserializer<TopicEntryJson> {
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
     override fun close() {}
-}
-
-private class MottattSoknadSerDesOverforeDager: SerDes<TopicEntry<SøknadOverføreDagerV1>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<SøknadOverføreDagerV1>? {
-        return data?.let {
-            objectMapper.readValue<TopicEntry<SøknadOverføreDagerV1>>(it)
-        }
-    }
-}
-
-private class PreprossesertSerDesOverforeDager: SerDes<TopicEntry<PreprossesertOverforeDagerV1>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<PreprossesertOverforeDagerV1>? {
-        return data?.let {
-            objectMapper.readValue(it)
-        }
-    }
-}
-
-private class CleanupSerDesOverforeDager: SerDes<TopicEntry<CleanupOverforeDager>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<CleanupOverforeDager>? {
-        return data?.let {
-            objectMapper.readValue(it)
-        }
-    }
-}
-
-private class JournalfortSerDesOverforeDager: SerDes<TopicEntry<JournalfortOverforeDager>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<JournalfortOverforeDager>? {
-        return data?.let {
-            objectMapper.readValue(it)
-        }
-    }
+    override fun serialize(topic: String, entry: TopicEntryJson): ByteArray = entry.rawJson.toByteArray()
+    override fun deserialize(topic: String, entry: ByteArray): TopicEntryJson = TopicEntryJson(String(entry))
 }
