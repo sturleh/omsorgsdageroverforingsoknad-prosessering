@@ -16,11 +16,11 @@ private object StreamCounter {
     internal fun feil(name: String) = counter.labels(name, "FEIL").inc()
 }
 
-internal fun <BEFORE, AFTER>process(
+internal fun process(
     name: String,
     soknadId: String,
-    entry: TopicEntry<BEFORE>,
-    block: suspend() -> AFTER) : TopicEntry<AFTER> {
+    entry: TopicEntry,
+    block: suspend() -> Data) : TopicEntry {
     return runBlocking(MDCContext(mapOf(
         "correlation_id" to entry.metadata.correlationId,
         "request_id" to entry.metadata.requestId,

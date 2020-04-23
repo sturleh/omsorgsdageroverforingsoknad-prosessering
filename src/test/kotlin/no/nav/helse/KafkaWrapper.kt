@@ -3,6 +3,7 @@ package no.nav.helse
 import no.nav.common.JAASCredential
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.prosessering.Metadata
+import no.nav.helse.prosessering.v1.asynkron.Data
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_OVERFOREDAGER
@@ -103,7 +104,7 @@ fun KafkaConsumer<String, String>.hentJournalførtMeldingOverforeDager(
     throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
 }
 
-fun KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>.leggTilMottak(soknad: SøknadOverføreDagerV1) {
+fun KafkaProducer<String, TopicEntry>.leggTilMottak(soknad: SøknadOverføreDagerV1) {
     send(
         ProducerRecord(
             MOTTATT_OVERFOREDAGER.name,
@@ -114,7 +115,7 @@ fun KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>.leggTilMottak(sok
                     correlationId = UUID.randomUUID().toString(),
                     requestId = UUID.randomUUID().toString()
                 ),
-                data = soknad
+                data = Data(omsorgsdageroverførningKonfigurertMapper().writeValueAsString(soknad))
             )
         )
     ).get()

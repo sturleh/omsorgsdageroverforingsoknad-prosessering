@@ -1,7 +1,10 @@
 package no.nav.helse
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.application.Application
 import io.ktor.application.ApplicationStopping
 import io.ktor.application.call
@@ -33,6 +36,11 @@ import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.prosessering.v1.PdfV1Generator
 import no.nav.helse.prosessering.v1.PreprosseseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.AsynkronProsesseringV1Service
+import no.nav.helse.prosessering.v1.asynkron.CleanupOverforeDager
+import no.nav.helse.prosessering.v1.asynkron.Data
+import no.nav.helse.prosessering.v1.asynkron.TopicEntry
+import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
+import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -48,10 +56,7 @@ fun Application.omsorgsdageroverforingsoknadProsessering() {
 
     install(ContentNegotiation) {
         jackson {
-            dusseldorfConfigured()
-                .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
-                .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
-
+            omsorgsdageroverførningKonfigurertMapper()
         }
     }
 
@@ -126,6 +131,12 @@ fun Application.omsorgsdageroverforingsoknadProsessering() {
             )
         )
     }
+}
+
+fun omsorgsdageroverførningKonfigurertMapper(): ObjectMapper {
+    return jacksonObjectMapper().dusseldorfConfigured()
+        .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+        .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
 }
 
 private fun Url.Companion.healthURL(baseUrl: URI) = Url.buildURL(baseUrl = baseUrl, pathParts = listOf("health"))

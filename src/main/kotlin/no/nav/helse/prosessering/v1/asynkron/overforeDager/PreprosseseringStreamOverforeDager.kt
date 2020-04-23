@@ -5,26 +5,23 @@ import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
 import no.nav.helse.prosessering.v1.PreprosseseringV1Service
-import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics
+import no.nav.helse.prosessering.v1.asynkron.deserialiserTilSøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.asynkron.process
-import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
+import no.nav.helse.prosessering.v1.asynkron.serialiserTilData
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
-import java.time.ZonedDateTime
 
 internal class PreprosseseringStreamOverforeDager(
-        preprosseseringV1Service: PreprosseseringV1Service,
-        kafkaConfig: KafkaConfig
+    preprosseseringV1Service: PreprosseseringV1Service,
+    kafkaConfig: KafkaConfig
 ) {
     private val stream = ManagedKafkaStreams(
-            name = NAME,
-            properties = kafkaConfig.stream(NAME),
-            topology = topology(preprosseseringV1Service),
-            unreadyAfterStreamStoppedIn = kafkaConfig.unreadyAfterStreamStoppedIn
+        name = NAME,
+        properties = kafkaConfig.stream(NAME),
+        topology = topology(preprosseseringV1Service),
+        unreadyAfterStreamStoppedIn = kafkaConfig.unreadyAfterStreamStoppedIn
     )
 
     internal val ready = ManagedStreamReady(stream)
@@ -41,23 +38,20 @@ internal class PreprosseseringStreamOverforeDager(
             val tilPreprossesert = Topics.PREPROSSESERT_OVERFOREDAGER
 
             builder
-                    .stream<String, TopicEntry<SøknadOverføreDagerV1>>(
-                            fromMottatt.name,
-                            Consumed.with(fromMottatt.keySerde, fromMottatt.valueSerde)
-                    )
-                    .filter { _, entry -> 2 == entry.metadata.version }
-                    .mapValues { soknadId, entry ->
-                        process(NAME, soknadId, entry) {
-                            logger.info("Preprosesserer søknad for overføring av dager.")
-                            val preprossesertMelding = preprosseseringV1Service.preprosseserOverforeDager(
-                                    melding = entry.data,
-                                    metadata = entry.metadata
-                            )
-                            logger.info("Preprossesering søknad overføre dager ferdig.")
-                            preprossesertMelding
-                        }
+                .stream(fromMottatt.name, fromMottatt.consumed)
+                .filter { _, entry -> 2 == entry.metadata.version }
+                .mapValues { soknadId, entry ->
+                    process(NAME, soknadId, entry) {
+                        logger.info("Preprosesserer søknad for overføring av dager.")
+                        val preprossesertMelding = preprosseseringV1Service.preprosseserOverforeDager(
+                            melding = entry.deserialiserTilSøknadOverføreDagerV1(),
+                            metadata = entry.metadata
+                        )
+                        logger.info("Preprossesering søknad overføre dager ferdig.")
+                        preprossesertMelding.serialiserTilData()
                     }
-                    .to(tilPreprossesert.name, Produced.with(tilPreprossesert.keySerde, tilPreprossesert.valueSerde))
+                }
+                .to(tilPreprossesert.name, tilPreprossesert.produced)
             return builder.build()
         }
     }
