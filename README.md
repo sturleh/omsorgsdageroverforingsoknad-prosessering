@@ -1,6 +1,5 @@
 # Omsorgsdageroverføringsøknad-prosessering
 ![CI / CD](https://github.com/navikt/omsorgsdageroverforingsoknad-prosessering/workflows/CI%20/%20CD/badge.svg)
-
 ![NAIS Alerts](https://github.com/navikt/omsorgsdageroverforingsoknad-prosessering/workflows/Alerts/badge.svg)
 
 Tjeneste som prosesserer søknader om overføring av omsorgsdager
