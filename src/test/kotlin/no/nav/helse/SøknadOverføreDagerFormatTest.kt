@@ -45,7 +45,8 @@ class SøknadOverføreDagerFormatTest {
                     {
                     "fødselsnummer": "123456789"
                     }
-                  ]
+                  ],
+                  "stengingsperiode" : "etterAugust9"
                 }
 
         """.trimIndent(), String(json), true
@@ -78,6 +79,7 @@ class SøknadOverføreDagerFormatTest {
         navnMottaker = "navn navnesen",
         fosterbarn = listOf(
             Fosterbarn("123456789")
-        )
+        ),
+        stengingsperiode = Stengingsperiode.ETTER_AUGUST_9
     )
 }

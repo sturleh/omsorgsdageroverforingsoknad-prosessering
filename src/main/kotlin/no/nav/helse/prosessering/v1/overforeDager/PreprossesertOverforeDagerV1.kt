@@ -18,7 +18,8 @@ data class PreprossesertOverforeDagerV1(
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
     val dokumentUrls: List<List<URI>>,
-    val fosterbarn: List<Fosterbarn>? = listOf()
+    val fosterbarn: List<Fosterbarn>? = listOf(),
+    val stengingsperiode: Stengingsperiode? = null //TODO Fjerne optional når front har prodsatt
 ) {
     internal constructor(
         melding: SøknadOverføreDagerV1,
@@ -37,7 +38,8 @@ data class PreprossesertOverforeDagerV1(
         fnrMottaker = melding.fnrMottaker,
         navnMottaker = melding.navnMottaker,
         dokumentUrls = dokumentUrls,
-        fosterbarn = melding.fosterbarn
+        fosterbarn = melding.fosterbarn,
+        stengingsperiode = melding.stengingsperiode
     )
 }
 

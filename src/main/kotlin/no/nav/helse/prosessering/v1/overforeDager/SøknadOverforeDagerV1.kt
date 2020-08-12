@@ -17,7 +17,8 @@ data class SøknadOverføreDagerV1 (
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val fosterbarn: List<Fosterbarn>? = listOf()
+    val fosterbarn: List<Fosterbarn>? = listOf(),
+    val stengingsperiode: Stengingsperiode? = null //TODO Fjerne optional etter frontend har prodsatt
 )
 
 data class Fosterbarn(
@@ -43,7 +44,6 @@ data class Søker(
     }
 }
 
-
 data class Medlemskap(
     val harBoddIUtlandetSiste12Mnd: Boolean,
     val utenlandsoppholdSiste12Mnd: List<Utenlandsopphold> = listOf(),
@@ -60,4 +60,9 @@ data class Utenlandsopphold(
     override fun toString(): String {
         return "Utenlandsopphold(fraOgMed=$fraOgMed, tilOgMed=$tilOgMed, landkode='$landkode', landnavn='$landnavn')"
     }
+}
+
+enum class Stengingsperiode(val utskriftsvennlig: String){
+    @JsonProperty("mars13tilJuni30") MARS_13_TIL_JUNI_30("13. mars - 30. juni"),
+    @JsonProperty("etterAugust9") ETTER_AUGUST_9("Fra og med 10. august")
 }

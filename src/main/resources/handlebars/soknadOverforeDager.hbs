@@ -52,6 +52,12 @@
     <h2><span>Melding</span></h2>
     <p><b>Hvem skal dagene overføres til?</b> {{navnMottaker}} ({{fnrMottaker}})</p>
     <p><b>Hvor mange dager skal overføres?</b> {{antallDager}}</p>
+    {{#if stengingsperiode}}
+        <p><b>Hvilken periode gjelder overføringen for?</b> {{stengingsperiode}}</p>
+    {{/if}}
+
+
+
 
     <!-- Fosterbarn -->
     {{#if fosterbarnListe.fosterbarn}}

@@ -55,7 +55,8 @@ class PdfV1GeneratorTest {
         fosterbarn = listOf(
             Fosterbarn("29099012345"),
             Fosterbarn("02119970078")
-        )
+        ),
+        stengingsperiode = Stengingsperiode.ETTER_AUGUST_9
     )
 
     private fun genererOppsummeringsPdfer(writeBytes: Boolean) {

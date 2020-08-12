@@ -96,6 +96,7 @@ internal class PdfV1Generator {
                         "fosterbarnListe" to mapOf(
                             "fosterbarn" to melding.fosterbarn?.somMapFosterbarn()
                         ),
+                        "stengingsperiode" to melding.stengingsperiode?.utskriftsvennlig,
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
