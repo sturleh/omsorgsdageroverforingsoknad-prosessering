@@ -3,6 +3,8 @@ package no.nav.helse.prosessering.v1.asynkron
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.omsorgsdageroverførningKonfigurertMapper
 import no.nav.helse.prosessering.Metadata
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.PreprossesertDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
@@ -36,7 +38,6 @@ internal object Topics {
         serDes = SerDes()
     )
 
-
     val CLEANUP_OVERFOREDAGER = Topic(
         name = "privat-overfore-omsorgsdager-soknad-cleanup",
         serDes = SerDes()
@@ -46,6 +47,27 @@ internal object Topics {
         name = "privat-overfore-omsorgsdager-soknad-journalfort",
         serDes = SerDes()
     )
+
+    val MOTTATT_DELE_OMSORGSDAGER = Topic(
+        name = "privat-dele-omsorgsdager-melding-mottatt",
+        serDes = SerDes()
+    )
+
+    val PREPROSSESERT_DELE_OMSORGSDAGER = Topic(
+        name = "privat-dele-omsorgsdager-melding-preprossesert",
+        serDes = SerDes()
+    )
+
+    val CLEANUP_DELE_OMSORGSDAGER = Topic(
+        name = "privat-dele-omsorgsdager-melding-cleanup",
+        serDes = SerDes()
+    )
+
+    val JOURNALFORT_DELE_OMSORGSDAGER = Topic(
+        name = "privat-dele-omsorgsdager-journalfort",
+        serDes = SerDes()
+    )
+
 }
 
 data class Data(val rawJson: String)
@@ -53,6 +75,12 @@ data class CleanupOverforeDager(
     val metadata: Metadata,
     val meldingV1: PreprossesertOverforeDagerV1,
     val journalførtMelding: JournalfortOverforeDager
+)
+
+data class CleanupDeleOmsorgsdager(
+    val metadata: Metadata,
+    val meldingV1: PreprossesertDeleOmsorgsdagerV1,
+    val journalførtMelding: JournalfortDeleOmsorgsdager
 )
 
 class SerDes : Serializer<TopicEntry>, Deserializer<TopicEntry> {
@@ -65,10 +93,17 @@ class SerDes : Serializer<TopicEntry>, Deserializer<TopicEntry> {
 internal fun TopicEntry.deserialiserTilSøknadOverføreDagerV1(): SøknadOverføreDagerV1 = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
 internal fun TopicEntry.deserialiserTilPreprossesertOverforeDagerV1():PreprossesertOverforeDagerV1  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
 internal fun TopicEntry.deserialiserTilCleanupOverforeDager():CleanupOverforeDager  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
+
+internal fun TopicEntry.deserialiserTilMeldingDeleOmsorgsdagerV1(): MeldingDeleOmsorgsdagerV1 = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
+internal fun TopicEntry.deserialiserTilPreprossesertDeleOmsorgsdagerV1():PreprossesertDeleOmsorgsdagerV1  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
+internal fun TopicEntry.deserialiserTilCleanupDeleOmsorgsdager():CleanupDeleOmsorgsdager  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
+
+
 internal fun Any.serialiserTilData() = Data(omsorgsdageroverførningKonfigurertMapper().writeValueAsString(this))
 
 
 data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
+data class JournalfortDeleOmsorgsdager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad) //TODO Utvide K9 for dele omsorgsdager
 
 data class TopicEntry(val rawJson: String) {
     constructor(metadata: Metadata, data: Data) : this(

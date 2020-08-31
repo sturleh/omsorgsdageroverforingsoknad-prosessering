@@ -23,3 +23,22 @@ internal fun String.assertOverføreDagerFormat() {
 
     JSONAssert.assertEquals(søknad.toString(), OmsorgspengerOverføringSøknad.SerDes.serialize(rekonstruertSøknad), true)
 }
+
+internal fun String.assertDeleOmsorgsdagerFormat() {
+    val rawJson = JSONObject(this)
+
+    val metadata = assertNotNull(rawJson.getJSONObject("metadata"))
+    assertNotNull(metadata.getString("correlationId"))
+
+    val data = assertNotNull(rawJson.getJSONObject("data"))
+
+    assertNotNull(data.getString("journalpostId"))
+    val søknad = assertNotNull(data.getJSONObject("søknad"))
+
+    val rekonstruertSøknad = OmsorgspengerOverføringSøknad
+        .builder()
+        .json(søknad.toString())
+        .build()
+
+    JSONAssert.assertEquals(søknad.toString(), OmsorgspengerOverføringSøknad.SerDes.serialize(rekonstruertSøknad), true)
+}

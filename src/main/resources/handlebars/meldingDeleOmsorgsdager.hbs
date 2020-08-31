@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Melding om deling av omsorgsdager</title>
+    {{#block 'style' }}
+    {{/block}}
+
+    {{#*inline "jaNeiCheckbox"}}
+        {{#if parameter}}
+            <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
+            <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
+        {{else}}
+            <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
+            <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
+        {{/if}}
+    {{/inline}}
+
+</head>
+<body>
+<div id="header">
+    <img class="navlogo" src="{{ image "Navlogo.png" }}"/>
+    <h1 class="title">Melding om deling av omsorgsdager</h1>
+</div>
+<div class="container">
+    <div id="container_top">
+        <div class="nokkeldata">
+            <br/><br/>
+            <p>
+                <span class="nokkeldata__overskrift">Sendt til NAV</span><br/>
+                {{soknad_mottatt_dag}} {{ soknad_mottatt }}
+            </p>
+        </div>
+        <div class="personinfo">
+            <div class="persontekst">
+                <div class="persontekst__sidetopp">
+                    <img class="ikon" src="{{ image "Personikon.png" }}"/>
+                    <div class="persontekst__personalia">
+                        <p class="navn">
+                            {{ søker.navn }}
+                        </p>
+                        <p class="id">
+                            {{ søker.fødselsnummer }}<br/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAMTYKKE -->
+    <h2><span>Samtykke</span></h2>
+
+    <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
+    {{>jaNeiCheckbox parameter=samtykke.harForståttRettigheterOgPlikter}}
+
+    <hr/>
+    <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
+    {{>jaNeiCheckbox parameter=samtykke.harBekreftetOpplysninger}}
+
+</div>
+
+<!-- FOOTER -->
+<div id="footer">
+    <span class="soknadsid">{{ soknad_id }}</span>
+    <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
+</div>
+</body>
+</html>

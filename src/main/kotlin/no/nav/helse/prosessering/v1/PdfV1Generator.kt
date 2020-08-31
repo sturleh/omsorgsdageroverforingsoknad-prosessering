@@ -8,6 +8,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -19,6 +20,7 @@ internal class PdfV1Generator {
     private companion object {
         private const val ROOT = "handlebars"
         private const val SOKNAD_OVERFOREDAGER = "soknadOverforeDager"
+        private const val MELDING_DELE_OMSORGSDAGER = "meldingDeleOmsorgsdager"
 
         private val REGULAR_FONT = "$ROOT/fonts/SourceSansPro-Regular.ttf".fromResources().readBytes()
         private val BOLD_FONT = "$ROOT/fonts/SourceSansPro-Bold.ttf".fromResources().readBytes()
@@ -49,6 +51,7 @@ internal class PdfV1Generator {
         }
 
         private val soknadOverforeDagerTemplate = handlebars.compile(SOKNAD_OVERFOREDAGER)
+        private val meldingDeleOmsorgsdagerTemplate = handlebars.compile(MELDING_DELE_OMSORGSDAGER)
 
         private val ZONE_ID = ZoneId.of("Europe/Oslo")
         private val DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZONE_ID)
@@ -97,6 +100,48 @@ internal class PdfV1Generator {
                             "fosterbarn" to melding.fosterbarn?.somMapFosterbarn()
                         ),
                         "stengingsperiode" to melding.stengingsperiode?.utskriftsvennlig,
+                        "samtykke" to mapOf(
+                            "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
+                            "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
+                        ),
+                        "hjelp" to mapOf(
+                            "språk" to melding.språk?.sprakTilTekst()
+                        )
+                    )
+                )
+                .resolver(MapValueResolver.INSTANCE)
+                .build()
+        ).let { html ->
+            val outputStream = ByteArrayOutputStream()
+
+            PdfRendererBuilder()
+                .useFastMode()
+                .withHtmlContent(html, "")
+                .medFonter()
+                .toStream(outputStream)
+                .buildPdfRenderer()
+                .createPDF()
+
+            return outputStream.use {
+                it.toByteArray()
+            }
+        }
+    }
+
+    internal fun generateSoknadOppsummeringPdfDeleOmsorgsdager(
+        melding: MeldingDeleOmsorgsdagerV1
+    ): ByteArray {
+        meldingDeleOmsorgsdagerTemplate.apply(
+            Context
+                .newBuilder(
+                    mapOf(
+                        "soknad_id" to melding.søknadId,
+                        "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
+                        "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
+                        "søker" to mapOf(
+                            "navn" to melding.søker.formatertNavn(),
+                            "fødselsnummer" to melding.søker.fødselsnummer
+                        ),
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger

@@ -5,6 +5,8 @@ import no.nav.helse.aktoer.AktørId
 import no.nav.helse.dokument.DokumentService
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.PreprossesertDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.reportMetrics
@@ -72,6 +74,59 @@ internal class PreprosseseringV1Service(
 
         preprossesertMeldingV1OverforeDager.reportMetrics()
         return preprossesertMeldingV1OverforeDager
+    }
+
+    internal suspend fun preprosseserMeldingDeleOmsorgsdager(
+        melding: MeldingDeleOmsorgsdagerV1,
+        metadata: Metadata
+    ): PreprossesertDeleOmsorgsdagerV1 {
+        val søknadId = SoknadId(melding.søknadId)
+        logger.info("Preprosseserer melding om deling av omsorgsdager med søknadsId: $søknadId")
+
+        val correlationId = CorrelationId(metadata.correlationId)
+
+        val søkerAktørId = AktørId(melding.søker.aktørId)
+
+        logger.info("Søkerens AktørID = $søkerAktørId")
+
+        logger.info("Genererer Oppsummerings-PDF av meldingen.")
+        val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdfDeleOmsorgsdager(melding)
+        logger.info("Generering av Oppsummerings-PDF OK.")
+
+        logger.info("Mellomlagrer Oppsummerings-PDF.")
+        val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
+            pdf = soknadOppsummeringPdf,
+            correlationId = correlationId,
+            aktørId = søkerAktørId,
+            dokumentbeskrivelse = "Melding om deling av omsorgsdager"
+        )
+        logger.info("Mellomlagring av Oppsummerings-PDF OK")
+
+        logger.info("Mellomlagrer Oppsummerings-JSON")
+
+        val soknadJsonUrl = dokumentService.lagreDeleOmsorgsdagerMelding(
+            melding = melding,
+            aktørId = søkerAktørId,
+            correlationId = correlationId
+        )
+        logger.info("Mellomlagrer Oppsummerings-JSON OK.")
+
+        val komplettDokumentUrls = mutableListOf(
+            listOf(soknadOppsummeringPdfUrl,
+                soknadJsonUrl
+            )
+        )
+
+        logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
+
+        val preprossesertDeleOmsorgsdagerV1 = PreprossesertDeleOmsorgsdagerV1(
+                melding = melding,
+                søkerAktørId = søkerAktørId,
+                dokumentUrls = komplettDokumentUrls.toList()
+            )
+
+        //preprossesertDeleOmsorgsdagerV1.reportMetrics() //TODO
+        return preprossesertDeleOmsorgsdagerV1
     }
 
 }
