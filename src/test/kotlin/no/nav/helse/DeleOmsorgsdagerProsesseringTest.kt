@@ -141,6 +141,25 @@ class DeleOmsorgsdagerProsesseringTest {
             .assertDeleOmsorgsdagerFormat()
     }
 
+    @Test
+    fun `En feilprosessert melding om deling av omsorgsdager vil bli prosessert etter at tjenesten restartes`() {
+        val melding = gyldigMeldingDeleOmsorgsdager(
+            fødselsnummerSoker = gyldigFodselsnummerA
+        )
+
+        wireMockServer.stubJournalfor(500) // Simulerer feil ved journalføring
+
+        kafkaTestProducerDeleOmsorgsdager.leggTilMottakDeleOmsorgsdager(melding)
+        ventPaaAtRetryMekanismeIStreamProsessering()
+        readyGir200HealthGir503()
+
+        wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
+        restartEngine()
+        journalføringsKonsumerDeleOmsorgsdager
+            .hentJournalførtMeldingDeleOmsorgsdager(melding.søknadId)
+            .assertDeleOmsorgsdagerFormat()
+    }
+
 
     private fun gyldigMeldingDeleOmsorgsdager(
         fødselsnummerSoker: String,
@@ -179,5 +198,18 @@ class DeleOmsorgsdagerProsesseringTest {
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true
     )
+
+    private fun readyGir200HealthGir503() {
+        with(engine) {
+            handleRequest(HttpMethod.Get, "/isready") {}.apply {
+                assertEquals(HttpStatusCode.OK, response.status())
+                handleRequest(HttpMethod.Get, "/health") {}.apply {
+                    assertEquals(HttpStatusCode.ServiceUnavailable, response.status())
+                }
+            }
+        }
+    }
+
+    private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }
 
 }
