@@ -72,6 +72,25 @@ class PdfV1GeneratorTest {
             fødselsnummer = "12345678911",
             fødselsdato = LocalDate.now().minusYears(18)
         ),
+        medlemskap = Medlemskap(
+            harBoddIUtlandetSiste12Mnd = true,
+            utenlandsoppholdSiste12Mnd = listOf(
+                Utenlandsopphold(
+                    LocalDate.of(2020, 1, 2),
+                    LocalDate.of(2020, 1, 3),
+                    "US", "USA"
+                )
+            ),
+            skalBoIUtlandetNeste12Mnd = true,
+            utenlandsoppholdNeste12Mnd = listOf(
+                Utenlandsopphold(
+                    fraOgMed = LocalDate.of(2020,2,1),
+                    tilOgMed = LocalDate.of(2020,2,24),
+                    landkode = "US",
+                    landnavn = "USA"
+                )
+            )
+        ),
         mottatt = ZonedDateTime.now(),
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true

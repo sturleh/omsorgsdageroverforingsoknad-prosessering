@@ -51,6 +51,7 @@ internal class CleanupStreamDeleOmsorgsdager(
                         )
                         logger.info("Dokumenter slettet.")
                         logger.info("Videresender journalført dele omsorgsdager til K9-Sak")
+                        logger.debug("Melding som blir sendt til K9: {}", cleanupMelding) //TODO: Fjernes, kun for debug
                         cleanupMelding.journalførtMelding.serialiserTilData()
                     }
                 }

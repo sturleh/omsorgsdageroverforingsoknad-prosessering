@@ -142,6 +142,12 @@ internal class PdfV1Generator {
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
+                        "medlemskap" to mapOf(
+                            "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
+                            "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),
+                            "skal_bo_i_utlandet_neste_12_mnd" to melding.medlemskap.skalBoIUtlandetNeste12Mnd,
+                            "utenlandsopphold_neste_12_mnd" to melding.medlemskap.utenlandsoppholdNeste12Mnd.somMapUtenlandsopphold()
+                        ),
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
