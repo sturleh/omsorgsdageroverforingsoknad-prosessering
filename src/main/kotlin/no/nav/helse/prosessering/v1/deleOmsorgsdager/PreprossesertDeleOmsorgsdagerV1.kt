@@ -13,7 +13,6 @@ data class PreprossesertDeleOmsorgsdagerV1(
     val mottatt: ZonedDateTime,
     val søker: PreprossesertSøker,
     val språk: String?,
-    val medlemskap: Medlemskap,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val dokumentUrls: List<List<URI>>
@@ -27,7 +26,6 @@ data class PreprossesertDeleOmsorgsdagerV1(
         soknadId = melding.søknadId,
         søker = PreprossesertSøker(melding.søker, søkerAktørId),
         mottatt = melding.mottatt,
-        medlemskap = melding.medlemskap,
         harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
         dokumentUrls = dokumentUrls
