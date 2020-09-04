@@ -117,8 +117,7 @@ class PdfV1GeneratorTest {
         fnrMottaker = "12345678911",
         navnMottaker = "Navn Mottaker",
         antallDagerTilOverføre = 5,
-        harBekreftetMottakerOpplysninger = true,
-        feltForTest = "test"
+        harBekreftetMottakerOpplysninger = true
     )
 
     private fun genererOppsummeringsPdfer(writeBytes: Boolean) {

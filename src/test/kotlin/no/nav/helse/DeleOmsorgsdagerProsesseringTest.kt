@@ -220,8 +220,7 @@ class DeleOmsorgsdagerProsesseringTest {
         fnrMottaker = "12345678911",
         navnMottaker = "Navn Mottaker",
         antallDagerTilOverføre = 5,
-        harBekreftetMottakerOpplysninger = true,
-        feltForTest = "Test"
+        harBekreftetMottakerOpplysninger = true
     )
 
     private fun readyGir200HealthGir503() {

@@ -28,8 +28,7 @@ data class MeldingDeleOmsorgsdagerV1(
     val fnrMottaker: String,
     val navnMottaker: String,
     val antallDagerTilOverføre: Int,
-    val harBekreftetMottakerOpplysninger: Boolean,
-    val feltForTest: String
+    val harBekreftetMottakerOpplysninger: Boolean
 )
 
 data class Barn (
