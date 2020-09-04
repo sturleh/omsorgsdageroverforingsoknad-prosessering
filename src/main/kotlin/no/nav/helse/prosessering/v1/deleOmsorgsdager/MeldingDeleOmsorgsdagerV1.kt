@@ -40,7 +40,7 @@ data class Barn (
 )
 
 data class AndreBarn (
-    val fnr: String,
+    val fnr: String?,
     val ingenFnr: Boolean,
     val navn: String
 )
