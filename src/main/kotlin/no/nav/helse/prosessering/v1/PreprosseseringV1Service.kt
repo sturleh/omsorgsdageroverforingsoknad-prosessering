@@ -7,6 +7,7 @@ import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.PreprossesertDeleOmsorgsdagerV1
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.reportMetrics
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.reportMetrics
@@ -125,7 +126,7 @@ internal class PreprosseseringV1Service(
                 dokumentUrls = komplettDokumentUrls.toList()
             )
 
-        //preprossesertDeleOmsorgsdagerV1.reportMetrics() //TODO
+        preprossesertDeleOmsorgsdagerV1.reportMetrics()
         return preprossesertDeleOmsorgsdagerV1
     }
 
