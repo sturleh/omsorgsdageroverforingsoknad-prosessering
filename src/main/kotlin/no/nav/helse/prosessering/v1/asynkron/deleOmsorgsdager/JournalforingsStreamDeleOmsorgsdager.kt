@@ -7,10 +7,7 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.asynkron.*
-import no.nav.helse.prosessering.v1.asynkron.Topics
-import no.nav.helse.prosessering.v1.asynkron.process
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.PreprossesertDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertSøker
@@ -40,7 +37,7 @@ internal class JournalforingsStreamDeleOmsorgsdager(
     internal val healthy = ManagedStreamHealthy(stream)
 
     private companion object {
-        private const val NAME = "JournalforingV1DeleOmsorgsdager'"
+        private const val NAME = "JournalforingV1DeleOmsorgsdager"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
         private fun topology(joarkGateway: JoarkGateway): Topology {
