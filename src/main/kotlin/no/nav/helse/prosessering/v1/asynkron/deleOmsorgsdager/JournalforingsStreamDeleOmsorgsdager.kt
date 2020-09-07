@@ -1,5 +1,7 @@
 package no.nav.helse.prosessering.v1.asynkron.deleOmsorgsdager
 
+import no.nav.helse.CorrelationId
+import no.nav.helse.aktoer.AktørId
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
@@ -53,7 +55,7 @@ internal class JournalforingsStreamDeleOmsorgsdager(
 
                         val dokumenter = preprosessertMelding.dokumentUrls
                         logger.info("Journalfører deling av omsorgsdager dokumenter: {}", dokumenter)
-/*                        val journaPostId = joarkGateway.journalførOverforeDager(
+                        val journaPostId = joarkGateway.journalførOverforeDager(
                             mottatt = preprosessertMelding.mottatt,
                             aktørId = AktørId(preprosessertMelding.søker.aktørId),
                             norskIdent = preprosessertMelding.søker.fødselsnummer,
@@ -61,7 +63,6 @@ internal class JournalforingsStreamDeleOmsorgsdager(
                             dokumenter = dokumenter
                         )
                         logger.info("Dokumenter til deling av  omsorgsdager journalført med ID = ${journaPostId.journalpostId}.")
-
                         //TODO: Lage tilK9.....
 
 
@@ -69,15 +70,11 @@ internal class JournalforingsStreamDeleOmsorgsdager(
                             journalpostId = journaPostId.journalpostId,
                                 søknad = preprosessertMelding.tilK9DeleOmsorgsdager()
                             )
-*/
 
                         CleanupDeleOmsorgsdager(
                             metadata = entry.metadata,
                             meldingV1 = preprosessertMelding,
-                            journalførtMelding = JournalfortDeleOmsorgsdager(
-                                journalpostId = "1111",// TODO FJERNE
-                                søknad = preprosessertMelding.tilK9DeleOmsorgsdager() //TODO FJERNE
-                            )
+                            journalførtMelding = journalfort
                         ).serialiserTilData()
                     }
                 }
