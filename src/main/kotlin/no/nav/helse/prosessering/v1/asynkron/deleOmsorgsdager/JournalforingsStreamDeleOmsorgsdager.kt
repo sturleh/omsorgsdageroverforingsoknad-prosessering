@@ -49,9 +49,10 @@ internal class JournalforingsStreamDeleOmsorgsdager(
             val mapValues = builder
                 .stream(fraPreprossesertV1.name, fraPreprossesertV1.consumed)
                 .filter { _, entry -> 1 == entry.metadata.version }
-                .filter{_, entry -> !entry.deserialiserTilPreprossesertDeleOmsorgsdagerV1().dokumentUrls.contains(listOf(
-                    URI("https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiI4YjZiY2EyOS1kYjk4LTQ0MDMtOGJhMC1lOWY0MDBiZDlmNzIifQ")
-                )) }
+                .filter{_, entry -> val flatMap = entry.deserialiserTilPreprossesertDeleOmsorgsdagerV1().dokumentUrls.flatMap { it }
+                    logger.info("Ignorerer søknad med url https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiI4YjZiY2EyOS1kYjk4LTQ0MDMtOGJhMC1lOWY0MDBiZDlmNzIifQ")
+                    !flatMap.contains(URI("https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiI4YjZiY2EyOS1kYjk4LTQ0MDMtOGJhMC1lOWY0MDBiZDlmNzIifQ"))
+                }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         val preprosessertMelding =
