@@ -21,7 +21,7 @@ data class PreprossesertDeleOmsorgsdagerV1(
     val harUtvidetRettFor: List<Barn>? = listOf(),
     val borINorge: Boolean,
     val arbeidINorge: Boolean,
-    val arbeidssituasjon: List<Arbeidssituasjon>,
+    val arbeidssituasjon: List<Arbeidssituasjon>?,
     val antallDagerHarBruktEtter1Juli: Int,
     val harDeltDagerMedAndreTidligere: Boolean,
     val antallDagerHarDeltMedAndre: Int,
