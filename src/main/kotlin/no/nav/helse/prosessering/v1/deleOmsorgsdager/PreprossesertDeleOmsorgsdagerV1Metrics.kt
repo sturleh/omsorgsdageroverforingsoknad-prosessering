@@ -10,5 +10,7 @@ private val antallDeleOmsorgsdagerHistogram = Histogram.build()
 
 internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
 
-    antallDeleOmsorgsdagerHistogram.observe(antallDagerTilOverføre.toDouble())
+    if (antallDagerTilOverføre != null) {
+        antallDeleOmsorgsdagerHistogram.observe(antallDagerTilOverføre.toDouble())
+    }
 }
