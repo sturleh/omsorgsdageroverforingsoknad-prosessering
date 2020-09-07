@@ -72,6 +72,7 @@ internal class JournalforingsStreamDeleOmsorgsdager(
                 .filter{_, entry -> val flatMap = entry.deserialiserTilPreprossesertDeleOmsorgsdagerV1().dokumentUrls.flatMap { it }
                     logger.info("Ignorerer søknad med url https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiJiY2RlYmY0Zi02ZGNlLTRlNjktOGNhYS1kZThiYmIzZGE5M2QifQ")
                     !flatMap.contains(URI("https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiJiY2RlYmY0Zi02ZGNlLTRlNjktOGNhYS1kZThiYmIzZGE5M2QifQ"))
+                    !flatMap.contains(URI("https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiJiY2RlYmY0Zi02ZGNlLTRlNjktOGNhYS1kZThiYmIzZGE5M2QifQ"))
                 }
                 .filter{_, entry -> val flatMap = entry.deserialiserTilPreprossesertDeleOmsorgsdagerV1().dokumentUrls.flatMap { it }
                     logger.info("Ignorerer søknad med url https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiI5MzRjMjNmZi1mMzU0LTRiYmEtOTJjZS1lMWRmMjQ0ZDM0NTgifQ")
@@ -80,6 +81,10 @@ internal class JournalforingsStreamDeleOmsorgsdager(
                 .filter{_, entry -> val flatMap = entry.deserialiserTilPreprossesertDeleOmsorgsdagerV1().dokumentUrls.flatMap { it }
                     logger.info("Ignorerer søknad med url https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiJjNWNjNWIwZS1mYjBlLTRjZTMtYjMzOC0zYjRlNmVlYzMwNTUifQ")
                     !flatMap.contains(URI("https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiJjNWNjNWIwZS1mYjBlLTRjZTMtYjMzOC0zYjRlNmVlYzMwNTUifQ"))
+                }
+                .filter{_, entry -> val flatMap = entry.deserialiserTilPreprossesertDeleOmsorgsdagerV1().dokumentUrls.flatMap { it }
+                    logger.info("Ignorerer søknad med url https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiI4ZWQyZmQ3NS0yYTE2LTQ3M2UtYjQ2Zi05MzA5NzNmOGE2YzYifQ")
+                    !flatMap.contains(URI("https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiI4ZWQyZmQ3NS0yYTE2LTQ3M2UtYjQ2Zi05MzA5NzNmOGE2YzYifQ"))
                 }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
