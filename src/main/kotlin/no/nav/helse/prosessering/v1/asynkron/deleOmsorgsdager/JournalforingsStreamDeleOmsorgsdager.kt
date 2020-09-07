@@ -20,6 +20,7 @@ import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøkn
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
+import java.net.URI
 
 internal class JournalforingsStreamDeleOmsorgsdager(
     joarkGateway: JoarkGateway,
@@ -48,6 +49,9 @@ internal class JournalforingsStreamDeleOmsorgsdager(
             val mapValues = builder
                 .stream(fraPreprossesertV1.name, fraPreprossesertV1.consumed)
                 .filter { _, entry -> 1 == entry.metadata.version }
+                .filter{_, entry -> !entry.deserialiserTilPreprossesertDeleOmsorgsdagerV1().dokumentUrls.contains(listOf(
+                    URI("https://k9-dokument.nais.preprod.local/v1/dokument/eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoibm9uZSJ9.eyJqdGkiOiI4YjZiY2EyOS1kYjk4LTQ0MDMtOGJhMC1lOWY0MDBiZDlmNzIifQ")
+                )) }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         val preprosessertMelding =
