@@ -1,11 +1,8 @@
 package no.nav.helse.prosessering.v1.deleOmsorgsdager
 
 import no.nav.helse.aktoer.AktørId
-import no.nav.helse.prosessering.v1.*
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
-import no.nav.helse.prosessering.v1.overforeDager.Medlemskap
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertSøker
-import no.nav.k9.søknad.omsorgspenger.overføring.Mottaker
 import java.net.URI
 import java.time.ZonedDateTime
 
@@ -17,11 +14,11 @@ data class PreprossesertDeleOmsorgsdagerV1(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val dokumentUrls: List<List<URI>>,
-    val andreBarn: List<AndreBarn>,
+    val andreBarn: List<AndreBarn>? = listOf(),
     val harAleneomsorg: Boolean,
-    val harAleneomsorgFor: List<Barn>,
+    val harAleneomsorgFor: List<Barn>? = listOf(),
     val harUtvidetRett: Boolean,
-    val harUtvidetRettFor: List<Barn>,
+    val harUtvidetRettFor: List<Barn>? = listOf(),
     val borINorge: Boolean,
     val arbeidINorge: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
