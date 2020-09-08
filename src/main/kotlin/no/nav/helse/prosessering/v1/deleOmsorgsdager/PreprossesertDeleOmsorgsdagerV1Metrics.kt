@@ -15,10 +15,19 @@ private val jaNeiCounterUtvidetRett = Counter.build()
     .labelNames("spm", "svar")
     .register()
 
+private val counterJobberINorgeMenBorIkkeINorge = Counter.build()
+    .name("counter_jobber_i_norge_men_bor_ikke_i_norge")
+    .help("Teller for hvor mange som jobber i Norge, men ikke bor i Norge")
+    .labelNames("spm", "svar")
+    .register()
+
 internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
     antallDeleOmsorgsdagerHistogram.observe(antallDagerTilOverføre.toDouble())
 
     jaNeiCounterUtvidetRett.labels("utvidetRett", harUtvidetRett.tilJaEllerNei()).inc()
+
+    if(arbeidINorge && !borINorge) counterJobberINorgeMenBorIkkeINorge.labels("Jobber i Norge, men bor ikke i Norge", "Ja").inc()
+
 }
 
 private fun Boolean.tilJaEllerNei(): String = if (this) "Ja" else "Nei"
