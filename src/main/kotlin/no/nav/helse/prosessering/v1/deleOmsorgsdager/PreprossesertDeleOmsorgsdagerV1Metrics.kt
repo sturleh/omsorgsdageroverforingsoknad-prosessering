@@ -1,5 +1,6 @@
 package no.nav.helse.prosessering.v1.deleOmsorgsdager
 
+import io.prometheus.client.Counter
 import io.prometheus.client.Histogram
 
 private val antallDeleOmsorgsdagerHistogram = Histogram.build()
@@ -8,9 +9,16 @@ private val antallDeleOmsorgsdagerHistogram = Histogram.build()
     .help("Antall omsorgsdager man deler")
     .register()
 
-internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
+private val jaNeiCounterUtvidetRett = Counter.build()
+    .name("ja_nei_counter_utvidet_rett")
+    .help("Teller for svar på ja/nei spørsmål om utvidet rett")
+    .labelNames("spm", "svar")
+    .register()
 
-    if (antallDagerTilOverføre != null) {
-        antallDeleOmsorgsdagerHistogram.observe(antallDagerTilOverføre.toDouble())
-    }
+internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
+    antallDeleOmsorgsdagerHistogram.observe(antallDagerTilOverføre.toDouble())
+
+    jaNeiCounterUtvidetRett.labels("utvidetRett", harUtvidetRett.tilJaEllerNei()).inc()
 }
+
+private fun Boolean.tilJaEllerNei(): String = if (this) "Ja" else "Nei"
