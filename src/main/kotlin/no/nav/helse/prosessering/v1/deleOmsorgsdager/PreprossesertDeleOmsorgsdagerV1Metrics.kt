@@ -9,20 +9,20 @@ private val antallDeleOmsorgsdagerHistogram = Histogram.build()
     .help("Antall omsorgsdager man deler")
     .register()
 
-private val jaNeiCounterUtvidetRett = Counter.build()
-    .name("ja_nei_counter_utvidet_rett")
+private val jaNeiUtvidetRettCounter = Counter.build()
+    .name("ja_nei_utvidet_rett_counter")
     .help("Teller for svar på ja/nei spørsmål om utvidet rett")
     .labelNames("spm", "svar")
     .register()
 
-private val counterJobberINorgeMenBorIkkeINorge = Counter.build()
-    .name("counter_jobber_i_norge_men_bor_ikke_i_norge")
+private val jobberINorgeMenBorIkkeINorgeCounter = Counter.build()
+    .name("jobber_i_norge_men_bor_ikke_i_norge_counter")
     .help("Teller for hvor mange som jobber i Norge, men ikke bor i Norge")
     .labelNames("spm", "svar")
     .register()
 
 private val fordelingSamboerEllerEktefelleCounter = Counter.build()
-    .name("counter_samboer_eller_ektefelle")
+    .name("samboer_eller_ektefelle_counter")
     .help("Teller hvor mange som deler med samboer eller ektefelle")
     .labelNames("spm", "svar")
     .register()
@@ -30,9 +30,9 @@ private val fordelingSamboerEllerEktefelleCounter = Counter.build()
 internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
     antallDeleOmsorgsdagerHistogram.observe(antallDagerTilOverføre.toDouble())
 
-    jaNeiCounterUtvidetRett.labels("utvidetRett", harUtvidetRett.tilJaEllerNei()).inc()
+    jaNeiUtvidetRettCounter.labels("utvidetRett", harUtvidetRett.tilJaEllerNei()).inc()
 
-    if(arbeidINorge && !borINorge) counterJobberINorgeMenBorIkkeINorge.labels("Jobber i Norge, men bor ikke i Norge", "Ja").inc()
+    if(arbeidINorge && !borINorge) jobberINorgeMenBorIkkeINorgeCounter.labels("Jobber i Norge, men bor ikke i Norge", "Ja").inc()
 
     fordelingSamboerEllerEktefelleCounter.labels("fordelingSamboerEllerEktefelle", overføreTilType.name).inc()
 }
