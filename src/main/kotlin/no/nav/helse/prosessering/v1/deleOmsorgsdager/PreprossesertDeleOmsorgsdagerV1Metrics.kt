@@ -21,6 +21,12 @@ private val counterJobberINorgeMenBorIkkeINorge = Counter.build()
     .labelNames("spm", "svar")
     .register()
 
+private val fordelingSamboerEktefelleCounter = Counter.build()
+    .name("counter_samboer_eller_ektefelle")
+    .help("Teller hvor mange som deler med samboer eller ektefelle")
+    .labelNames("spm", "svar")
+    .register()
+
 internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
     antallDeleOmsorgsdagerHistogram.observe(antallDagerTilOverføre.toDouble())
 
@@ -28,6 +34,7 @@ internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
 
     if(arbeidINorge && !borINorge) counterJobberINorgeMenBorIkkeINorge.labels("Jobber i Norge, men bor ikke i Norge", "Ja").inc()
 
+    fordelingSamboerEktefelleCounter.labels("fordelingSamboerEllerEktefelle", overføreTilType.name).inc()
 }
 
 private fun Boolean.tilJaEllerNei(): String = if (this) "Ja" else "Nei"
