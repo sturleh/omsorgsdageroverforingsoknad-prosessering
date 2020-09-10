@@ -6,7 +6,6 @@ import no.nav.helse.prosessering.v1.deleOmsorgsdager.Barn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
 import no.nav.helse.prosessering.v1.overforeDager.*
-import org.junit.Ignore
 import java.io.File
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -90,8 +89,15 @@ class PdfV1GeneratorTest {
             Barn(
                 fødselsdato = LocalDate.parse("2010-01-01"),
                 aktørId = "12345",
-                fornavn = "Fornavn",
-                etternavn = "Etternavn",
+                fornavn = "Ola",
+                etternavn = "Nordmann",
+                mellomnavn = "Mellomnavn"
+            ),
+            Barn(
+                fødselsdato = LocalDate.parse("2010-01-01"),
+                aktørId = "12345",
+                fornavn = "Ola",
+                etternavn = "Nordmann",
                 mellomnavn = "Mellomnavn"
             )
         ),
@@ -139,7 +145,7 @@ class PdfV1GeneratorTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     fun `opprett lesbar oppsummerings-PDF`() {
         genererOppsummeringsPdfer(true)
     }

@@ -11,6 +11,8 @@
     <bookmarks>
         <bookmark name="Søker" href="#søker" />
         <bookmark name="Samtykke" href="#samtykke" />
+        <bookmark name="Har aleneomsorg" href="#aleneomsorg" />
+        <bookmark name="Har utvidet rett" href="#utvidetRett" />
     </bookmarks>
     {{#block 'style-common' }}
     {{/block}}
@@ -27,11 +29,6 @@
 
 <div class="innholdscontainer">
     <div class="person" id="søker">
-        {{#if søker.relasjonTilBarnet}}
-            <p>
-                {{søker.relasjonTilBarnet}} til barnet.
-            </p>
-        {{/if}}
         <p class="navn">
             {{ søker.navn }}
         </p>
@@ -39,6 +36,44 @@
             {{ søker.fødselsnummer }}<br />
         </p>
     </div>
+
+    <!-- ANDRE_BARN -->
+    <section>
+        <h2>Andre barn</h2>
+
+    </section>
+
+    <!-- ALENEOMSORG -->
+    <section id="aleneomsorg">
+        <h2>Aleneomsorg</h2>
+        <p class="sporsmalstekst">Har aleneomsorg?</p>
+        <p >{{ jaNeiSvar harAleneomsorg }}</p>
+        {{#if harAleneomsorg}}
+            {{#each harAleneomsorgFor as | barn|~}}
+                <ul>
+                    <li>
+                        <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
+                    </li>
+                </ul>
+            {{/each}}
+        {{/if}}
+    </section>
+
+    <!-- UTVIDET_RETT -->
+    <section id="utvidetRett">
+        <h2>Aleneomsorg</h2>
+        <p class="sporsmalstekst">Har utvidet rett?</p>
+        <p >{{ jaNeiSvar harUtvidetRett }}</p>
+        {{#if harUtvidetRett}}
+            {{#each harUtvidetRettFor as | barn|~}}
+                <ul>
+                    <li>
+                        <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
+                    </li>
+                </ul>
+            {{/each}}
+        {{/if}}
+    </section>
 
     <!-- SAMTYKKE -->
     <section id="samtykke">

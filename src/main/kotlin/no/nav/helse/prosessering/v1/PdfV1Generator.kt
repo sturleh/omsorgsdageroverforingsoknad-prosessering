@@ -8,6 +8,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.Barn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.*
 import java.io.ByteArrayInputStream
@@ -146,6 +147,10 @@ internal class PdfV1Generator {
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
+                        "harAleneomsorg" to melding.harAleneomsorg,
+                        "harAleneomsorgFor" to melding.harAleneomsorgFor.somMap(),
+                        "harUtvidetRett" to melding.harUtvidetRett,
+                        "harUtvidetRettFor" to melding.harUtvidetRettFor.somMap(),
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
@@ -224,6 +229,18 @@ private fun List<Fosterbarn>.somMapFosterbarn(): List<Map<String, Any?>> {
         )
     }
 }
+
+private fun List<Barn>.somMap(): List<Map<String, Any?>> {
+    return map {
+        mapOf(
+            "navn" to it.formatertNavn(),
+            "fødselsdato" to it.fødselsdato,
+            "aktørid" to it.aktørId
+        )
+    }
+}
+
+private fun Barn.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
 
 private fun Søker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
 
