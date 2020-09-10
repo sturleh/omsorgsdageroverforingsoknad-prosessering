@@ -1,69 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="NO">
+
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <title>Melding om deling av omsorgsdager</title>
-    {{#block 'style' }}
+    <meta name="subject" content="Melding om deling av omsorgsdager" />
+    <meta name="author" content="nav.no" />
+    <meta name="description"
+          content="Melding om deling av omsorgsdager mottatt {{soknad_mottatt_dag}} {{ soknad_mottatt }}" />
+    <bookmarks>
+        <bookmark name="Søker" href="#søker" />
+        <bookmark name="Samtykke" href="#samtykke" />
+    </bookmarks>
+    {{#block 'style-common' }}
     {{/block}}
-
-    {{#*inline "jaNeiCheckbox"}}
-        {{#if parameter}}
-            <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-            <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-        {{else}}
-            <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-            <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-        {{/if}}
-    {{/inline}}
-
 </head>
+
 <body>
-<div id="header">
-    <img class="navlogo" src="{{ image "Navlogo.png" }}"/>
-    <h1 class="title">Melding om deling av omsorgsdager</h1>
-</div>
-<div class="container">
-    <div id="container_top">
-        <div class="nokkeldata">
-            <br/><br/>
+<h1 id="header">
+    Melding om deling av omsorgsdager
+</h1>
+<p class="nokkelinfo">
+    <strong>Sendt til NAV</strong>
+    {{soknad_mottatt_dag}} {{ soknad_mottatt }}
+</p>
+
+<div class="innholdscontainer">
+    <div class="person" id="søker">
+        {{#if søker.relasjonTilBarnet}}
             <p>
-                <span class="nokkeldata__overskrift">Sendt til NAV</span><br/>
-                {{soknad_mottatt_dag}} {{ soknad_mottatt }}
+                {{søker.relasjonTilBarnet}} til barnet.
             </p>
-        </div>
-        <div class="personinfo">
-            <div class="persontekst">
-                <div class="persontekst__sidetopp">
-                    <img class="ikon" src="{{ image "Personikon.png" }}"/>
-                    <div class="persontekst__personalia">
-                        <p class="navn">
-                            {{ søker.navn }}
-                        </p>
-                        <p class="id">
-                            {{ søker.fødselsnummer }}<br/>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{/if}}
+        <p class="navn">
+            {{ søker.navn }}
+        </p>
+        <p>
+            {{ søker.fødselsnummer }}<br />
+        </p>
     </div>
 
     <!-- SAMTYKKE -->
-    <h2><span>Samtykke</span></h2>
-
-    <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
-    {{>jaNeiCheckbox parameter=samtykke.harForståttRettigheterOgPlikter}}
-
-    <hr/>
-    <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
-    {{>jaNeiCheckbox parameter=samtykke.harBekreftetOpplysninger}}
-
+    <section id="samtykke">
+        <h2>Samtykke</h2>
+        <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
+        <p>{{ jaNeiSvar samtykke.harForståttRettigheterOgPlikter }}</p>
+        <hr />
+        <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
+        <p>{{ jaNeiSvar samtykke.harBekreftetOpplysninger }}</p>
+    </section>
 </div>
+
 
 <!-- FOOTER -->
-<div id="footer">
+<p id="footer">
     <span class="soknadsid">{{ soknad_id }}</span>
     <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
-</div>
+</p>
 </body>
+
 </html>
