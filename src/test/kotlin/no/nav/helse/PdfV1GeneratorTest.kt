@@ -1,10 +1,10 @@
 package no.nav.helse
 
-import no.nav.helse.prosessering.v1.*
+import no.nav.helse.prosessering.v1.PdfV1Generator
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.AndreBarn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.Barn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.OverføreTilType
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
 import no.nav.helse.prosessering.v1.overforeDager.*
 import org.junit.Ignore
 import java.io.File
@@ -81,8 +81,8 @@ class PdfV1GeneratorTest {
         andreBarn = listOf(
             AndreBarn(
                 fnr = "12345678900",
-                navn = "Barn Barnesen",
-                ingenFnr = false
+                fødselsdato = LocalDate.parse("2020-01-01"),
+                navn = "Barn Barnesen"
             )
         ),
         harAleneomsorg = true,
@@ -110,14 +110,11 @@ class PdfV1GeneratorTest {
         arbeidssituasjon = listOf(
             Arbeidssituasjon.ARBEIDSTAKER
         ),
-        antallDagerHarBruktEtter1Juli = 10,
-        harDeltDagerMedAndreTidligere = true,
-        antallDagerHarDeltMedAndre = 10,
-        overføreTilType = OverføreTilType.NY_EKTEFELLE,
-        fnrMottaker = "12345678911",
-        navnMottaker = "Navn Mottaker",
-        antallDagerTilOverføre = 5,
-        harBekreftetMottakerOpplysninger = true
+        antallDagerBruktEtter1Juli = 10,
+        mottakerType = Mottaker.EKTEFELLE,
+        mottakerFnr = "12345678911",
+        mottakerNavn = "Navn Mottaker",
+        antallDagerSomSkalOverføres = 5
     )
 
     private fun genererOppsummeringsPdfer(writeBytes: Boolean) {

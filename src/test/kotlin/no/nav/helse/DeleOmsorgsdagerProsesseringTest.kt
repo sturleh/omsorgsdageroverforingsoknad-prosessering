@@ -2,26 +2,22 @@ package no.nav.helse
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.ApplicationConfig
-import io.ktor.config.HoconApplicationConfig
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.engine.stop
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.createTestEnvironment
-import io.ktor.server.testing.handleRequest
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.config.*
+import io.ktor.http.*
+import io.ktor.server.engine.*
+import io.ktor.server.testing.*
+import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.delay
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.k9.assertDeleOmsorgsdagerFormat
-import no.nav.helse.k9.assertOverføreDagerFormat
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.AndreBarn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.Barn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.OverføreTilType
-import no.nav.helse.prosessering.v1.overforeDager.*
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
+import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
+import no.nav.helse.prosessering.v1.overforeDager.Søker
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.slf4j.Logger
@@ -184,8 +180,8 @@ class DeleOmsorgsdagerProsesseringTest {
         andreBarn = listOf(
             AndreBarn(
                 fnr = "12345678900",
-                navn = "Barn Barnesen",
-                ingenFnr = false
+                fødselsdato = LocalDate.parse("2020-01-01"),
+                navn = "Barn Barnesen"
             )
         ),
         harAleneomsorg = true,
@@ -213,14 +209,11 @@ class DeleOmsorgsdagerProsesseringTest {
         arbeidssituasjon = listOf(
             Arbeidssituasjon.ARBEIDSTAKER
         ),
-        antallDagerHarBruktEtter1Juli = 10,
-        harDeltDagerMedAndreTidligere = true,
-        antallDagerHarDeltMedAndre = 10,
-        overføreTilType = OverføreTilType.NY_EKTEFELLE,
-        fnrMottaker = "12345678911",
-        navnMottaker = "Navn Mottaker",
-        antallDagerTilOverføre = 5,
-        harBekreftetMottakerOpplysninger = true
+        antallDagerBruktEtter1Juli = 10,
+        mottakerType = Mottaker.EKTEFELLE,
+        mottakerFnr = "12345678911",
+        mottakerNavn = "Navn Mottaker",
+        antallDagerSomSkalOverføres = 5
     )
 
     private fun readyGir200HealthGir503() {
