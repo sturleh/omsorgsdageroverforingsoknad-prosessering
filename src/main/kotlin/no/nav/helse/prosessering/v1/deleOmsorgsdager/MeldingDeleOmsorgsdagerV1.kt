@@ -42,7 +42,7 @@ data class AndreBarn (
     val navn: String
 )
 
-enum class Mottaker() {
-    @JsonProperty("ektefelle") EKTEFELLE,
-    @JsonProperty("samboer") SAMBOER
+enum class Mottaker(val utskriftsvennlig: String) {
+    @JsonProperty("ektefelle") EKTEFELLE("Ektefelle"),
+    @JsonProperty("samboer") SAMBOER("Samboer")
 }

@@ -11,8 +11,11 @@
     <bookmarks>
         <bookmark name="Søker" href="#søker" />
         <bookmark name="Samtykke" href="#samtykke" />
+        <bookmark name="Andre barn" href="#andreBarn" />
         <bookmark name="Har aleneomsorg" href="#aleneomsorg" />
         <bookmark name="Har utvidet rett" href="#utvidetRett" />
+        <bookmark name="Din situasjon" href="#dinSituasjon" />
+        <bookmark name="Mottaker" href="#mottaker" />
     </bookmarks>
     {{#block 'style-common' }}
     {{/block}}
@@ -38,9 +41,15 @@
     </div>
 
     <!-- ANDRE_BARN -->
-    <section>
+    <section id="andreBarn">
         <h2>Andre barn</h2>
-
+        {{#each andreBarn as |andreBarn|~}}
+            <ul>
+                <li>
+                    <p>{{andreBarn.navn}}, {{andreBarn.fødselsdato}} ({{andreBarn.fnr}})</p>
+                </li>
+            </ul>
+        {{/each}}
     </section>
 
     <!-- ALENEOMSORG -->
@@ -61,7 +70,7 @@
 
     <!-- UTVIDET_RETT -->
     <section id="utvidetRett">
-        <h2>Aleneomsorg</h2>
+        <h2>Utvidet rett</h2>
         <p class="sporsmalstekst">Har utvidet rett?</p>
         <p >{{ jaNeiSvar harUtvidetRett }}</p>
         {{#if harUtvidetRett}}
@@ -73,6 +82,38 @@
                 </ul>
             {{/each}}
         {{/if}}
+    </section>
+
+    <!-- DIN_SITUASJON -->
+    <section id="dinSituasjon">
+        <h2>Din situasjon</h2>
+        <p class="sporsmalstekst">Bor du i Norge?</p>
+        <p>{{ jaNeiSvar borINorge}}</p>
+        <p class="sporsmalstekst">Arbeider du i Norge</p>
+        <p>{{ jaNeiSvar arbeiderINorge}}</p>
+        <p class="sporsmalstekst">Hva er din arbeidssituasjon?</p>
+        <p>
+            {{#if arbeidssituasjon}}
+                {{#each arbeidssituasjon as |situasjon|~}}
+                    <ul>
+                        <li>{{situasjon.utskriftvennlig}}</li>
+                    </ul>
+                {{/each}}
+            {{/if}}
+        </p>
+        <p class="sporsmalstekst">Hvor mange omsorgsdager har du brukt etter 1. juli 2020?</p>
+        <p>{{antallDagerBruktEtter1Juli}}</p>
+    </section>
+
+    <!-- MOTTAKER-->
+    <section id="mottaker">
+        <h2>Mottaker</h2>
+        <p class="sporsmalstekst">Hvem skal du overføre dager til?</p>
+        <p>{{mottakerNavn}} ({{mottakerType}})</p>
+        <p>Fødselsnummer: {{mottakerFnr}}</p>
+        <p class="sporsmalstekst">Hvor mange dager vil du overføre?</p>
+        <p>{{antallDagerSomSkalOverføres}} dager</p>
+
     </section>
 
     <!-- SAMTYKKE -->

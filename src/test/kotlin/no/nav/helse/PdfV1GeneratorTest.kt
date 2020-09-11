@@ -114,7 +114,8 @@ class PdfV1GeneratorTest {
         borINorge = true,
         arbeidINorge = true,
         arbeidssituasjon = listOf(
-            Arbeidssituasjon.ARBEIDSTAKER
+            Arbeidssituasjon.ARBEIDSTAKER,
+            Arbeidssituasjon.SELVSTENDIGNÆRINGSDRIVENDE
         ),
         antallDagerBruktEtter1Juli = 10,
         mottakerType = Mottaker.EKTEFELLE,

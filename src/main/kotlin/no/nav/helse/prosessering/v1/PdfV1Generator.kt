@@ -8,6 +8,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.AndreBarn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.Barn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.*
@@ -147,10 +148,19 @@ internal class PdfV1Generator {
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
+                        "andreBarn" to melding.andreBarn.somMapAndreBarn(),
                         "harAleneomsorg" to melding.harAleneomsorg,
                         "harAleneomsorgFor" to melding.harAleneomsorgFor.somMap(),
                         "harUtvidetRett" to melding.harUtvidetRett,
                         "harUtvidetRettFor" to melding.harUtvidetRettFor.somMap(),
+                        "borINorge" to melding.borINorge,
+                        "arbeiderINorge" to melding.arbeidINorge,
+                        "arbeidssituasjon" to melding.arbeidssituasjon.somMapUtskriftvennlig(),
+                        "antallDagerBruktEtter1Juli" to melding.antallDagerBruktEtter1Juli,
+                        "mottakerType" to melding.mottakerType.utskriftsvennlig,
+                        "mottakerFnr" to melding.mottakerFnr,
+                        "mottakerNavn" to melding.mottakerNavn,
+                        "antallDagerSomSkalOverføres" to melding.antallDagerSomSkalOverføres,
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
@@ -167,6 +177,7 @@ internal class PdfV1Generator {
 
             PdfRendererBuilder()
                 .useFastMode()
+                .usePdfUaAccessbility(true)
                 .withHtmlContent(html, "")
                 .medFonter()
                 .toStream(outputStream)
@@ -236,6 +247,15 @@ private fun List<Barn>.somMap(): List<Map<String, Any?>> {
             "navn" to it.formatertNavn(),
             "fødselsdato" to it.fødselsdato,
             "aktørid" to it.aktørId
+        )
+    }
+}
+private fun List<AndreBarn>.somMapAndreBarn(): List<Map<String, Any?>> {
+    return map {
+        mapOf(
+            "navn" to it.navn,
+            "fødselsdato" to it.fødselsdato,
+            "fnr" to it.fnr
         )
     }
 }
