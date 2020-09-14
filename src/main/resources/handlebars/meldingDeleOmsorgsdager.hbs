@@ -58,7 +58,14 @@
         <p class="sporsmalstekst">Har aleneomsorg?</p>
         <p >{{ jaNeiSvar harAleneomsorg }}</p>
         {{#if harAleneomsorg}}
-            {{#each harAleneomsorgFor as | barn|~}}
+            {{#each harAleneomsorgFor.barn as | barn|~}}
+                <ul>
+                    <li>
+                        <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
+                    </li>
+                </ul>
+            {{/each}}
+            {{#each harAleneomsorgFor.andreBarn as | barn|~}}
                 <ul>
                     <li>
                         <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
@@ -74,7 +81,14 @@
         <p class="sporsmalstekst">Har utvidet rett?</p>
         <p >{{ jaNeiSvar harUtvidetRett }}</p>
         {{#if harUtvidetRett}}
-            {{#each harUtvidetRettFor as | barn|~}}
+            {{#each harUtvidetRettFor.barn as | barn|~}}
+            <ul>
+                <li>
+                    <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
+                </li>
+            </ul>
+            {{/each}}
+            {{#each harUtvidetRettFor.andreBarn as | barn|~}}
                 <ul>
                     <li>
                         <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>

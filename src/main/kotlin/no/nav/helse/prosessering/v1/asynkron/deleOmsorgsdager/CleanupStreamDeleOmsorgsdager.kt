@@ -7,9 +7,10 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.asynkron.*
 import no.nav.helse.prosessering.v1.asynkron.Topics
+import no.nav.helse.prosessering.v1.asynkron.deserialiserTilCleanupDeleOmsorgsdager
 import no.nav.helse.prosessering.v1.asynkron.process
+import no.nav.helse.prosessering.v1.asynkron.serialiserTilData
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
@@ -35,7 +36,7 @@ internal class CleanupStreamDeleOmsorgsdager(
         private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
             val fraCleanup = Topics.CLEANUP_DELE_OMSORGSDAGER
-            val tilJournalfort= Topics.JOURNALFORT_DELE_OMSORGSDAGER //TODO: Lage egen topic som går til K9-Sak
+            val tilJournalfort= Topics.JOURNALFORT_DELE_OMSORGSDAGER //TODO: Lage egen topic som går til K9-Sak - K9_RAPID_V1
 
             builder
                 .stream(fraCleanup.name, fraCleanup.consumed)
@@ -50,6 +51,10 @@ internal class CleanupStreamDeleOmsorgsdager(
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
                         logger.info("Dokumenter slettet.")
+
+                        //TODO: Mappe om til Behovssekvens
+
+
                         logger.info("Videresender journalført dele omsorgsdager til K9-Sak")
                         logger.info("Melding som blir sendt til K9: {}", cleanupMelding.serialiserTilData()) //TODO: Fjernes, kun for debug
                         cleanupMelding.journalførtMelding.serialiserTilData()

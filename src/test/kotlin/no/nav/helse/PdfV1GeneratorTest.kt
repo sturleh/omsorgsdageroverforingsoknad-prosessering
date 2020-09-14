@@ -1,10 +1,7 @@
 package no.nav.helse
 
 import no.nav.helse.prosessering.v1.PdfV1Generator
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.AndreBarn
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.Barn
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.*
 import no.nav.helse.prosessering.v1.overforeDager.*
 import java.io.File
 import java.time.LocalDate
@@ -85,31 +82,36 @@ class PdfV1GeneratorTest {
             )
         ),
         harAleneomsorg = true,
-        harAleneomsorgFor = listOf(
-            Barn(
-                fødselsdato = LocalDate.parse("2010-01-01"),
-                aktørId = "12345",
-                fornavn = "Ola",
-                etternavn = "Nordmann",
-                mellomnavn = "Mellomnavn"
+        harAleneomsorgFor = BarnOgAndreBarn(
+            barn = listOf(
+                Barn(
+                    fødselsdato = LocalDate.parse("2010-01-01"),
+                    aktørId = "12345",
+                    fornavn = "Fornavn",
+                    etternavn = "Etternavn",
+                    mellomnavn = "Mellomnavn"
+                )
             ),
-            Barn(
-                fødselsdato = LocalDate.parse("2010-01-01"),
-                aktørId = "12345",
-                fornavn = "Ola",
-                etternavn = "Nordmann",
-                mellomnavn = "Mellomnavn"
+            andreBarn = listOf(
+                AndreBarn(
+                    fnr = "12345",
+                    fødselsdato = LocalDate.parse("2020-01-01"),
+                    navn = "Kjell kjell"
+                )
             )
         ),
         harUtvidetRett = true,
-        harUtvidetRettFor = listOf(
-            Barn(
-                fødselsdato = LocalDate.parse("2010-01-01"),
-                aktørId = "12345",
-                fornavn = "Fornavn",
-                etternavn = "Etternavn",
-                mellomnavn = "Mellomnavn"
-            )
+        harUtvidetRettFor = BarnOgAndreBarn(
+            barn = listOf(
+                Barn(
+                    fødselsdato = LocalDate.parse("2010-01-01"),
+                    aktørId = "12345",
+                    fornavn = "Fornavn",
+                    etternavn = "Etternavn",
+                    mellomnavn = "Mellomnavn"
+                )
+            ),
+            andreBarn = listOf()
         ),
         borINorge = true,
         arbeidINorge = true,

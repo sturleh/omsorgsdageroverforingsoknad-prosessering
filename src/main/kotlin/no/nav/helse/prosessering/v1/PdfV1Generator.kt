@@ -10,6 +10,7 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.AndreBarn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.Barn
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.BarnOgAndreBarn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.*
 import java.io.ByteArrayInputStream
@@ -250,6 +251,7 @@ private fun List<Barn>.somMap(): List<Map<String, Any?>> {
         )
     }
 }
+
 private fun List<AndreBarn>.somMapAndreBarn(): List<Map<String, Any?>> {
     return map {
         mapOf(
@@ -258,6 +260,13 @@ private fun List<AndreBarn>.somMapAndreBarn(): List<Map<String, Any?>> {
             "fnr" to it.fnr
         )
     }
+}
+
+private fun BarnOgAndreBarn.somMap(): Map<String, Any?> {
+    return mapOf<String, Any?>(
+        "barn" to barn.somMap(),
+        "andreBarn" to andreBarn.somMapAndreBarn()
+    )
 }
 
 private fun Barn.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"

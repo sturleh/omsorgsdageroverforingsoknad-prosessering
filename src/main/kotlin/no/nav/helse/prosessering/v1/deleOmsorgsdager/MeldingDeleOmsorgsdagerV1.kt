@@ -15,9 +15,9 @@ data class MeldingDeleOmsorgsdagerV1(
     val harBekreftetOpplysninger: Boolean,
     val andreBarn: List<AndreBarn>,
     val harAleneomsorg: Boolean,
-    val harAleneomsorgFor: List<Barn>,
+    val harAleneomsorgFor: BarnOgAndreBarn,
     val harUtvidetRett: Boolean,
-    val harUtvidetRettFor: List<Barn>,
+    val harUtvidetRettFor: BarnOgAndreBarn,
     val borINorge: Boolean,
     val arbeidINorge: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
@@ -35,6 +35,15 @@ data class Barn (
     val etternavn: String?,
     val aktørId: String?
 )
+
+data class BarnOgAndreBarn(
+    val barn: List<Barn>,
+    val andreBarn: List<AndreBarn>
+) {
+    fun erTom(): Boolean {
+        return barn.isEmpty() && andreBarn.isEmpty()
+    }
+}
 
 data class AndreBarn (
     val fnr: String,

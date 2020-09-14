@@ -68,6 +68,11 @@ internal object Topics {
         serDes = SerDes()
     )
 
+    val K9_RAPID_V1 = Topic(
+        name = "k9-rapid-v1-TEST", //TODO -TEST må fjernes
+        serDes = SerDes()
+    )
+
 }
 
 data class Data(val rawJson: String)
