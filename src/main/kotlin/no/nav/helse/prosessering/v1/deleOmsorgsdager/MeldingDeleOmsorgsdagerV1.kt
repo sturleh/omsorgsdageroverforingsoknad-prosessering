@@ -3,6 +3,7 @@ package no.nav.helse.prosessering.v1.deleOmsorgsdager
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
 import no.nav.helse.prosessering.v1.overforeDager.Søker
+import no.nav.k9.rapid.behov.OverføreOmsorgsdagerBehov
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
@@ -39,11 +40,7 @@ data class Barn (
 data class BarnOgAndreBarn(
     val barn: List<Barn>,
     val andreBarn: List<AndreBarn>
-) {
-    fun erTom(): Boolean {
-        return barn.isEmpty() && andreBarn.isEmpty()
-    }
-}
+)
 
 data class AndreBarn (
     val fnr: String,
@@ -53,5 +50,13 @@ data class AndreBarn (
 
 enum class Mottaker(val utskriftsvennlig: String) {
     @JsonProperty("ektefelle") EKTEFELLE("Ektefelle"),
-    @JsonProperty("samboer") SAMBOER("Samboer")
+    @JsonProperty("samboer") SAMBOER("Samboer");
+
+    fun tilK9Rapid(): OverføreOmsorgsdagerBehov.Relasjon {
+        //TODO Sjekk om dette kan gjøres penere, kanskje annet navn? Enkel return?
+        when(this){
+            EKTEFELLE -> return OverføreOmsorgsdagerBehov.Relasjon.NåværendeEktefelle
+            SAMBOER -> return OverføreOmsorgsdagerBehov.Relasjon.NåværendeSamboer
+        }
+    }
 }

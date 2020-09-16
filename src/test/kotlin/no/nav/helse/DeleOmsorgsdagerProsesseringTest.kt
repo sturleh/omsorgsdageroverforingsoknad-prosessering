@@ -156,7 +156,6 @@ class DeleOmsorgsdagerProsesseringTest {
             .assertDeleOmsorgsdagerFormat()
     }
 
-
     private fun gyldigMeldingDeleOmsorgsdager(
         fødselsnummerSoker: String,
         sprak: String = "nb"
@@ -165,7 +164,7 @@ class DeleOmsorgsdagerProsesseringTest {
         søknadId = UUID.randomUUID().toString(),
         mottatt = ZonedDateTime.now().plusDays(1),
         søker = Søker(
-            aktørId = "123456",
+            aktørId = "$gyldigFodselsnummerA",
             fødselsnummer = fødselsnummerSoker,
             fødselsdato = LocalDate.now().minusDays(1000),
             etternavn = "Nordmann",
@@ -176,7 +175,7 @@ class DeleOmsorgsdagerProsesseringTest {
         harForståttRettigheterOgPlikter = true,
         andreBarn = listOf(
             AndreBarn(
-                fnr = "12345678900",
+                fnr = "$gyldigFodselsnummerA",
                 fødselsdato = LocalDate.parse("2020-01-01"),
                 navn = "Barn Barnesen"
             )
@@ -186,7 +185,7 @@ class DeleOmsorgsdagerProsesseringTest {
             barn = listOf(
                 Barn(
                     fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
+                    aktørId = "$gyldigFodselsnummerA",
                     fornavn = "Fornavn",
                     etternavn = "Etternavn",
                     mellomnavn = "Mellomnavn"
@@ -199,7 +198,7 @@ class DeleOmsorgsdagerProsesseringTest {
             barn = listOf(
                 Barn(
                     fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
+                    aktørId = "$gyldigFodselsnummerA",
                     fornavn = "Fornavn",
                     etternavn = "Etternavn",
                     mellomnavn = "Mellomnavn"
@@ -214,7 +213,7 @@ class DeleOmsorgsdagerProsesseringTest {
         ),
         antallDagerBruktEtter1Juli = 10,
         mottakerType = Mottaker.EKTEFELLE,
-        mottakerFnr = "12345678911",
+        mottakerFnr = "$gyldigFodselsnummerB",
         mottakerNavn = "Navn Mottaker",
         antallDagerSomSkalOverføres = 5
     )
@@ -231,5 +230,4 @@ class DeleOmsorgsdagerProsesseringTest {
     }
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }
-
 }
