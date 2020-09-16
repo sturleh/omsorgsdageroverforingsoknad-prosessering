@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val dusseldorfKtorVersion = "1.3.2.4e29fb7"
+val k9RapidOverforeOmsorgsdagerVersion = "1.afe760e"
 val k9FormatVersion = "3.0.0.f5ec313"
 val ktorVersion = ext.get("ktorVersion").toString()
 val slf4jVersion = ext.get("slf4jVersion").toString()
@@ -58,6 +59,11 @@ dependencies {
     }
     testImplementation("org.skyscreamer:jsonassert:1.5.0")
     implementation(kotlin("stdlib-jdk8"))
+
+    // K9-Rapid
+    implementation("no.nav.k9.rapid:overfore-omsorgsdager:$k9RapidOverforeOmsorgsdagerVersion")
+    implementation("no.nav.k9.rapid:behov:$k9RapidOverforeOmsorgsdagerVersion")
+    implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.2.0")
 }
 
 repositories {
@@ -74,6 +80,15 @@ repositories {
         }
     }
 
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/navikt/k9-rapid")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+
     jcenter()
     mavenLocal()
     mavenCentral()
@@ -81,8 +96,8 @@ repositories {
 
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_12
+    targetCompatibility = JavaVersion.VERSION_12
 }
 
 
