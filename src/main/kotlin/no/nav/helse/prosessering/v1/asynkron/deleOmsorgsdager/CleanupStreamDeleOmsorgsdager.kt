@@ -55,7 +55,7 @@ internal class CleanupStreamDeleOmsorgsdager(
                         logger.info("Dokumenter slettet.")
 
                         //TODO: Mappe om til Behovssekvens
-                        val behovssekvens: Behovssekvens = cleanupMelding.tilK9Behovssekvens()
+                        //val behovssekvens: Behovssekvens = cleanupMelding.tilK9Behovssekvens()
 
                         logger.info("Videresender journalført dele omsorgsdager til K9-Sak")
                         logger.info("Melding som blir sendt til K9: {}", cleanupMelding.serialiserTilData()) //TODO: Fjernes, kun for debug
