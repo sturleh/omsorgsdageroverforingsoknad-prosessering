@@ -148,7 +148,7 @@ internal class PdfV1Generator {
                         ),
                         "borINorge" to melding.borINorge,
                         //TODO: Mappe barn til pdf
-                        "arbeiderINorge" to melding.arbeidINorge,
+                        "arbeiderINorge" to melding.arbeiderINorge,
                         "arbeidssituasjon" to melding.arbeidssituasjon.somMapUtskriftvennlig(),
                         "antallDagerBruktIÅr" to melding.antallDagerBruktIÅr,
                         "mottakerType" to melding.mottakerType.utskriftsvennlig,

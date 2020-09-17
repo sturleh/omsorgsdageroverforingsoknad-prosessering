@@ -176,7 +176,7 @@ class DeleOmsorgsdagerProsesseringTest {
         harForståttRettigheterOgPlikter = true,
         barn = listOf(),
         borINorge = true,
-        arbeidINorge = true,
+        arbeiderINorge = true,
         arbeidssituasjon = listOf(
             Arbeidssituasjon.ARBEIDSTAKER
         ),

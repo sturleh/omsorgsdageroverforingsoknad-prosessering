@@ -48,7 +48,7 @@ internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
 
     jaNeiBrukteDagerCounter.labels("brukteDager", (antallDagerBruktIÅr > 0).tilJaEllerNei()).inc()
 
-    if(arbeidINorge && !borINorge) jobberINorgeMenBorIkkeINorgeCounter.labels("Jobber i Norge, men bor ikke i Norge", "Ja").inc()
+    if(arbeiderINorge && !borINorge) jobberINorgeMenBorIkkeINorgeCounter.labels("Jobber i Norge, men bor ikke i Norge", "Ja").inc()
 
     antallBruktedagerHistogram.observe(antallDagerBruktIÅr.toDouble())
 }

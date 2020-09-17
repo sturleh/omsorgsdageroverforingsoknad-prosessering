@@ -55,10 +55,10 @@ internal class CleanupStreamDeleOmsorgsdager(
                         logger.info("Dokumenter slettet.")
 
                         //TODO: Mappe om til Behovssekvens
-                        //val behovssekvens: Behovssekvens = cleanupMelding.tilK9Behovssekvens()
+                        val behovssekvens: Behovssekvens = cleanupMelding.tilK9Behovssekvens()
 
                         logger.info("Videresender journalført dele omsorgsdager til K9-Sak")
-                        logger.info("Melding som blir sendt til K9: {}", cleanupMelding.serialiserTilData()) //TODO: Fjernes, kun for debug
+                        logger.info("Behvossekvens som blir sendt til K9: {}", behovssekvens.serialiserTilData()) //TODO: Fjernes, kun for debug
                         cleanupMelding.journalførtMelding.serialiserTilData()
                     }
                 }
@@ -77,8 +77,8 @@ private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
     val melding = this.meldingV1
 
     val overførerFra: OverføreOmsorgsdagerBehov.OverførerFra = OverføreOmsorgsdagerBehov.OverførerFra(
-        identitetsnummer = melding.søker.aktørId,
-        jobberINorge = melding.arbeidINorge,
+        identitetsnummer = melding.søker.fødselsnummer,
+        jobberINorge = melding.arbeiderINorge,
         borINorge = melding.borINorge
     )
 
