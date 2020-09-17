@@ -42,15 +42,22 @@ private val fordelingSamboerEllerEktefelleCounter = Counter.build()
 internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
     antallDeleOmsorgsdagerHistogram.observe(antallDagerSomSkalOverføres.toDouble())
 
-    jaNeiUtvidetRettCounter.labels("utvidetRett", harUtvidetRett.tilJaEllerNei()).inc()
+    jaNeiUtvidetRettCounter.labels("utvidetRett", barn.harNoenUtvidetRett().tilJaEllerNei()).inc()
 
     fordelingSamboerEllerEktefelleCounter.labels("fordelingSamboerEllerEktefelle", mottakerType.name).inc()
 
-    jaNeiBrukteDagerCounter.labels("brukteDager", (antallDagerBruktEtter1Juli > 0).tilJaEllerNei()).inc()
+    jaNeiBrukteDagerCounter.labels("brukteDager", (antallDagerBruktIÅr > 0).tilJaEllerNei()).inc()
 
     if(arbeidINorge && !borINorge) jobberINorgeMenBorIkkeINorgeCounter.labels("Jobber i Norge, men bor ikke i Norge", "Ja").inc()
 
-    if(antallDagerBruktEtter1Juli > 0) antallBruktedagerHistogram.observe(antallDagerBruktEtter1Juli.toDouble())
+    antallBruktedagerHistogram.observe(antallDagerBruktIÅr.toDouble())
 }
 
 private fun Boolean.tilJaEllerNei(): String = if (this) "Ja" else "Nei"
+
+private fun List<BarnUtvidet>.harNoenUtvidetRett(): Boolean{
+    forEach {
+        if (it.utvidetRett) return true
+    }
+    return false
+}

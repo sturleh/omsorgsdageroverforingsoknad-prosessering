@@ -1,7 +1,8 @@
 package no.nav.helse
 
 import no.nav.helse.prosessering.v1.PdfV1Generator
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.*
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
 import no.nav.helse.prosessering.v1.overforeDager.*
 import java.io.File
 import java.time.LocalDate
@@ -74,52 +75,14 @@ class PdfV1GeneratorTest {
         mottatt = ZonedDateTime.now(),
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
-        andreBarn = listOf(
-            AndreBarn(
-                fnr = "12345678900",
-                fødselsdato = LocalDate.parse("2020-01-01"),
-                navn = "Barn Barnesen"
-            )
-        ),
-        harAleneomsorg = true,
-        harAleneomsorgFor = BarnOgAndreBarn(
-            barn = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
-            ),
-            andreBarn = listOf(
-                AndreBarn(
-                    fnr = "12345",
-                    fødselsdato = LocalDate.parse("2020-01-01"),
-                    navn = "Kjell kjell"
-                )
-            )
-        ),
-        harUtvidetRett = true,
-        harUtvidetRettFor = BarnOgAndreBarn(
-            barn = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
-            ),
-            andreBarn = listOf()
-        ),
+        barn = listOf(),
         borINorge = true,
         arbeidINorge = true,
         arbeidssituasjon = listOf(
             Arbeidssituasjon.ARBEIDSTAKER,
             Arbeidssituasjon.SELVSTENDIGNÆRINGSDRIVENDE
         ),
-        antallDagerBruktEtter1Juli = 10,
+        antallDagerBruktIÅr = 10,
         mottakerType = Mottaker.EKTEFELLE,
         mottakerFnr = "12345678911",
         mottakerNavn = "Navn Mottaker",

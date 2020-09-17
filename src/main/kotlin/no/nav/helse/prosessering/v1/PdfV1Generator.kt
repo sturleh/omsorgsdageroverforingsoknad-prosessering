@@ -8,9 +8,6 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.dusseldorf.ktor.core.fromResources
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.AndreBarn
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.Barn
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.BarnOgAndreBarn
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.*
 import java.io.ByteArrayInputStream
@@ -149,15 +146,11 @@ internal class PdfV1Generator {
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
-                        "andreBarn" to melding.andreBarn.somMapAndreBarn(),
-                        "harAleneomsorg" to melding.harAleneomsorg,
-                        "harAleneomsorgFor" to melding.harAleneomsorgFor.somMap(),
-                        "harUtvidetRett" to melding.harUtvidetRett,
-                        "harUtvidetRettFor" to melding.harUtvidetRettFor.somMap(),
                         "borINorge" to melding.borINorge,
+                        //TODO: Mappe barn til pdf
                         "arbeiderINorge" to melding.arbeidINorge,
                         "arbeidssituasjon" to melding.arbeidssituasjon.somMapUtskriftvennlig(),
-                        "antallDagerBruktEtter1Juli" to melding.antallDagerBruktEtter1Juli,
+                        "antallDagerBruktIÅr" to melding.antallDagerBruktIÅr,
                         "mottakerType" to melding.mottakerType.utskriftsvennlig,
                         "mottakerFnr" to melding.mottakerFnr,
                         "mottakerNavn" to melding.mottakerNavn,
@@ -241,35 +234,6 @@ private fun List<Fosterbarn>.somMapFosterbarn(): List<Map<String, Any?>> {
         )
     }
 }
-
-private fun List<Barn>.somMap(): List<Map<String, Any?>> {
-    return map {
-        mapOf(
-            "navn" to it.formatertNavn(),
-            "fødselsdato" to it.fødselsdato,
-            "aktørid" to it.aktørId
-        )
-    }
-}
-
-private fun List<AndreBarn>.somMapAndreBarn(): List<Map<String, Any?>> {
-    return map {
-        mapOf(
-            "navn" to it.navn,
-            "fødselsdato" to it.fødselsdato,
-            "fnr" to it.fnr
-        )
-    }
-}
-
-private fun BarnOgAndreBarn.somMap(): Map<String, Any?> {
-    return mapOf<String, Any?>(
-        "barn" to barn.somMap(),
-        "andreBarn" to andreBarn.somMapAndreBarn()
-    )
-}
-
-private fun Barn.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
 
 private fun Søker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
 

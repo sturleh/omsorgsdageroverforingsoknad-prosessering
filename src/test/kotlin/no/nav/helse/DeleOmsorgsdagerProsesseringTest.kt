@@ -12,7 +12,8 @@ import kotlinx.coroutines.time.delay
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.k9.assertDeleOmsorgsdagerFormat
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.*
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
 import no.nav.helse.prosessering.v1.overforeDager.Søker
 import org.junit.AfterClass
@@ -173,45 +174,13 @@ class DeleOmsorgsdagerProsesseringTest {
         ),
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
-        andreBarn = listOf(
-            AndreBarn(
-                fnr = "$gyldigFodselsnummerA",
-                fødselsdato = LocalDate.parse("2020-01-01"),
-                navn = "Barn Barnesen"
-            )
-        ),
-        harAleneomsorg = true,
-        harAleneomsorgFor = BarnOgAndreBarn(
-            barn = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "$gyldigFodselsnummerA",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
-            ),
-            andreBarn = listOf()
-        ),
-        harUtvidetRett = true,
-        harUtvidetRettFor = BarnOgAndreBarn(
-            barn = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "$gyldigFodselsnummerA",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
-            ),
-            andreBarn = listOf()
-        ),
+        barn = listOf(),
         borINorge = true,
         arbeidINorge = true,
         arbeidssituasjon = listOf(
             Arbeidssituasjon.ARBEIDSTAKER
         ),
-        antallDagerBruktEtter1Juli = 10,
+        antallDagerBruktIÅr = 10,
         mottakerType = Mottaker.EKTEFELLE,
         mottakerFnr = "$gyldigFodselsnummerB",
         mottakerNavn = "Navn Mottaker",

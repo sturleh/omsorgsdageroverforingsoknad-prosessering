@@ -14,38 +14,15 @@ data class MeldingDeleOmsorgsdagerV1(
     val språk: String,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
-    val andreBarn: List<AndreBarn>,
-    val harAleneomsorg: Boolean,
-    val harAleneomsorgFor: BarnOgAndreBarn,
-    val harUtvidetRett: Boolean,
-    val harUtvidetRettFor: BarnOgAndreBarn,
+    val barn: List<BarnUtvidet>,
     val borINorge: Boolean,
     val arbeidINorge: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val antallDagerBruktEtter1Juli: Int,
+    val antallDagerBruktIÅr: Int,
     val mottakerType: Mottaker,
     val mottakerFnr: String,
     val mottakerNavn: String,
     val antallDagerSomSkalOverføres: Int
-)
-
-data class Barn (
-    val fødselsdato: LocalDate,
-    val fornavn: String?,
-    val mellomnavn: String?,
-    val etternavn: String?,
-    val aktørId: String?
-)
-
-data class BarnOgAndreBarn(
-    val barn: List<Barn>,
-    val andreBarn: List<AndreBarn>
-)
-
-data class AndreBarn (
-    val fnr: String,
-    val fødselsdato: LocalDate,
-    val navn: String
 )
 
 enum class Mottaker(val utskriftsvennlig: String) {
@@ -60,3 +37,12 @@ enum class Mottaker(val utskriftsvennlig: String) {
         }
     }
 }
+
+data class BarnUtvidet(
+    var identitetsnummer: String?, //TODO Ikke nullable i fremtiden
+    val aktørId: String?,
+    val fødselsdato: LocalDate,
+    val navn: String,
+    val aleneOmOmsorgen: Boolean,
+    val utvidetRett: Boolean
+)
