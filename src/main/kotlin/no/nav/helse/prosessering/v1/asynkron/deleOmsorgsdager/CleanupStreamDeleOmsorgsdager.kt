@@ -37,7 +37,7 @@ internal class CleanupStreamDeleOmsorgsdager(
         private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
             val fraCleanup = Topics.CLEANUP_DELE_OMSORGSDAGER
-            val tilJournalfort= Topics.JOURNALFORT_DELE_OMSORGSDAGER //TODO: Lage egen topic som går til K9-Sak - K9_RAPID_V1
+            val tilJournalfort= Topics.JOURNALFORT_DELE_OMSORGSDAGER //TODO: Bytt til K9_RAPID_V1
 
             builder
                 .stream(fraCleanup.name, fraCleanup.consumed)
@@ -53,12 +53,12 @@ internal class CleanupStreamDeleOmsorgsdager(
                         )
                         logger.info("Dokumenter slettet.")
 
+                        logger.info("Mapper om til Behovssekvens")
                         val behovssekvens: Behovssekvens = cleanupMelding.tilK9Behovssekvens()
                         val (id, overføring) = behovssekvens.keyValue
 
-                        logger.info("Videresender journalført dele omsorgsdager til K9-Sak")
                         logger.info("Behovssekvens -> ID {}, Innhold {}", id, overføring) //TODO: Fjernes, kun for debug
-
+                        logger.info("Behovssekvens sendes til K9")
                         cleanupMelding.journalførtMelding.serialiserTilData()
                     }
                 }

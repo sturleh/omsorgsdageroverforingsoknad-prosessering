@@ -69,7 +69,7 @@ internal object Topics {
     )
 
     val K9_RAPID_V1 = Topic(
-        name = "k9-rapid-v1-TEST", //TODO -TEST må fjernes
+        name = "k9-rapid-v1",
         serDes = SerDes()
     )
 
