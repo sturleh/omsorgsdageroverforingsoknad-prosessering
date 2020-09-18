@@ -13,6 +13,7 @@ import no.nav.k9.rapid.behov.Behovssekvens
 import no.nav.k9.rapid.behov.OverføreOmsorgsdagerBehov
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
+import org.json.JSONObject
 import org.slf4j.LoggerFactory
 
 
@@ -37,7 +38,7 @@ internal class CleanupStreamDeleOmsorgsdager(
         private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
             val fraCleanup = Topics.CLEANUP_DELE_OMSORGSDAGER
-            val tilJournalfort= Topics.JOURNALFORT_DELE_OMSORGSDAGER //TODO: Bytt til K9_RAPID_V1
+            val tilJournalfort= Topics.K9_RAPID_V1 //TODO: Bytt til K9_RAPID_V1
 
             builder
                 .stream(fraCleanup.name, fraCleanup.consumed)
@@ -59,10 +60,17 @@ internal class CleanupStreamDeleOmsorgsdager(
 
                         logger.info("Behovssekvens -> ID {}, Innhold {}", id, overføring) //TODO: Fjernes, kun for debug
                         logger.info("Behovssekvens sendes til K9")
-                        cleanupMelding.journalførtMelding.serialiserTilData()
+
+                        behovssekvens.serialiserTilData()
                     }
                 }
-                .to(tilJournalfort.name, tilJournalfort.produced) //TODO: Sende til K9-sak
+                .selectKey { key, value: TopicEntry ->
+                    val key = JSONObject(value.data.rawJson).getJSONObject("keyValue").getString("first")
+                    logger.info("Mapper om key fra søknadId til key fra behovsekvens------> {}", key)
+                    key
+                }
+                //.mapValues { value: TopicEntry -> JSONObject(value.data.rawJson).getJSONObject("keyValue").getString("second") }
+                .to(tilJournalfort.name, tilJournalfort.produced)
             return builder.build()
         }
     }

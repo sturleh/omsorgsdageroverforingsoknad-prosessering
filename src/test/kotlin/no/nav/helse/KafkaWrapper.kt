@@ -10,6 +10,7 @@ import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_OVERFOREDAGER
+import no.nav.helse.prosessering.v1.asynkron.Topics.K9_RAPID_V1
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT_DELE_OMSORGSDAGER
@@ -24,6 +25,7 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.util.*
 import kotlin.test.assertEquals
@@ -46,7 +48,8 @@ object KafkaWrapper {
                 MOTTATT_DELE_OMSORGSDAGER.name,
                 PREPROSSESERT_DELE_OMSORGSDAGER.name,
                 JOURNALFORT_DELE_OMSORGSDAGER.name,
-                CLEANUP_DELE_OMSORGSDAGER.name
+                CLEANUP_DELE_OMSORGSDAGER.name,
+                K9_RAPID_V1.name
             )
         )
         return kafkaEnvironment
@@ -89,13 +92,13 @@ fun KafkaEnvironment.journalføringsKonsumerOverforeDager(): KafkaConsumer<Strin
     return consumer
 }
 
-fun KafkaEnvironment.journalføringsKonsumerDeleOmsorgsdager(): KafkaConsumer<String, String> {
+fun KafkaEnvironment.k9RapidConsumer(): KafkaConsumer<String, String> {
     val consumer = KafkaConsumer(
-        testConsumerProperties("DeleOmsorgsdagerKonsumer"),
+        testConsumerProperties("K9 Rapid Consumer"),
         StringDeserializer(),
         StringDeserializer()
     )
-    consumer.subscribe(listOf(JOURNALFORT_DELE_OMSORGSDAGER.name))
+    consumer.subscribe(listOf(K9_RAPID_V1.name))
     return consumer
 }
 
@@ -130,7 +133,7 @@ fun KafkaConsumer<String, String>.hentJournalførtMeldingOverforeDager(
     throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
 }
 
-fun KafkaConsumer<String, String>.hentJournalførtMeldingDeleOmsorgsdager(
+fun KafkaConsumer<String, String>.hentK9RapidMelding(
     soknadId: String,
     maxWaitInSeconds: Long = 20
 ): String {
@@ -138,8 +141,11 @@ fun KafkaConsumer<String, String>.hentJournalførtMeldingDeleOmsorgsdager(
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
-            .records(JOURNALFORT_DELE_OMSORGSDAGER.name)
-            .filter { it.key() == soknadId }
+            .records(K9_RAPID_V1.name).toList()
+
+        entries.forEach {
+            LoggerFactory.getLogger("Testing ......").info("K9 Rapid Melding: {}", it)
+        }
 
         if (entries.isNotEmpty()) {
             assertEquals(1, entries.size)

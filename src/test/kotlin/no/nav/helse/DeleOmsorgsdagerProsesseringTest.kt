@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.delay
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
-import no.nav.helse.k9.assertDeleOmsorgsdagerFormat
+import no.nav.helse.k9.assertK9RapidFormat
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
@@ -52,7 +52,7 @@ class DeleOmsorgsdagerProsesseringTest {
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaTestProducerDeleOmsorgsdager = kafkaEnvironment.meldingDeleOmsorgsdagerProducer()
 
-        private val journalføringsKonsumerDeleOmsorgsdager = kafkaEnvironment.journalføringsKonsumerDeleOmsorgsdager()
+        private val journalføringsKonsumerDeleOmsorgsdager = kafkaEnvironment.k9RapidConsumer()
 
         // Se https://github.com/navikt/dusseldorf-ktor#f%C3%B8dselsnummer
         private val gyldigFodselsnummerA = "02119970078"
@@ -126,7 +126,7 @@ class DeleOmsorgsdagerProsesseringTest {
     }
 
     @Test
-    fun`Gyldig melding om deling av omsorgsdager blir prosessert av journalføringkonsumer`(){
+    fun `Gyldig melding om deling av omsorgsdager blir prosessert av journalføringkonsumer`() {
         val søknad = gyldigMeldingDeleOmsorgsdager(
             fødselsnummerSoker = gyldigFodselsnummerA,
             sprak = "nb"
@@ -134,8 +134,9 @@ class DeleOmsorgsdagerProsesseringTest {
 
         kafkaTestProducerDeleOmsorgsdager.leggTilMottakDeleOmsorgsdager(søknad)
         journalføringsKonsumerDeleOmsorgsdager
-            .hentJournalførtMeldingDeleOmsorgsdager(søknad.søknadId)
-            .assertDeleOmsorgsdagerFormat()
+            .hentK9RapidMelding(søknad.søknadId)
+            .assertK9RapidFormat()
+
     }
 
     @Test
@@ -153,14 +154,14 @@ class DeleOmsorgsdagerProsesseringTest {
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
         journalføringsKonsumerDeleOmsorgsdager
-            .hentJournalførtMeldingDeleOmsorgsdager(melding.søknadId)
-            .assertDeleOmsorgsdagerFormat()
+            .hentK9RapidMelding(melding.søknadId)
+            .assertK9RapidFormat()
     }
 
     private fun gyldigMeldingDeleOmsorgsdager(
         fødselsnummerSoker: String,
         sprak: String = "nb"
-    ) : MeldingDeleOmsorgsdagerV1 = MeldingDeleOmsorgsdagerV1(
+    ): MeldingDeleOmsorgsdagerV1 = MeldingDeleOmsorgsdagerV1(
         språk = sprak,
         søknadId = UUID.randomUUID().toString(),
         mottatt = ZonedDateTime.now().plusDays(1),
