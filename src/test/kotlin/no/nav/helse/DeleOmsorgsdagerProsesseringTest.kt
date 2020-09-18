@@ -172,7 +172,7 @@ class DeleOmsorgsdagerProsesseringTest {
             mellomnavn = "Mellomnavn",
             fornavn = "Ola"
         ),
-        id = "1",
+        id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
         barn = listOf(),
