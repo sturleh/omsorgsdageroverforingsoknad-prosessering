@@ -1,6 +1,7 @@
 package no.nav.helse
 
 import no.nav.helse.prosessering.v1.PdfV1Generator
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.BarnUtvidet
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
 import no.nav.helse.prosessering.v1.overforeDager.*
@@ -73,9 +74,27 @@ class PdfV1GeneratorTest {
             fødselsdato = LocalDate.now().minusYears(18)
         ),
         mottatt = ZonedDateTime.now(),
+        id = "1",
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
-        barn = listOf(),
+        barn = listOf(
+            BarnUtvidet(
+                navn = "Rå Alv",
+                fødselsdato = LocalDate.parse("2020-01-01"),
+                identitetsnummer = "12345",
+                aktørId = "1234",
+                aleneOmOmsorgen = true,
+                utvidetRett = true
+            ),
+            BarnUtvidet(
+                navn = "Berit Ustad",
+                fødselsdato = LocalDate.parse("2020-01-01"),
+                identitetsnummer = "12345",
+                aktørId = "1234",
+                aleneOmOmsorgen = true,
+                utvidetRett = true
+            )
+        ),
         borINorge = true,
         arbeiderINorge = true,
         arbeidssituasjon = listOf(

@@ -8,6 +8,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.BarnUtvidet
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.*
 import java.io.ByteArrayInputStream
@@ -146,8 +147,9 @@ internal class PdfV1Generator {
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
+                        "id" to melding.id,
                         "borINorge" to melding.borINorge,
-                        //TODO: Mappe barn til pdf
+                        "barn" to melding.barn.somMap(),
                         "arbeiderINorge" to melding.arbeiderINorge,
                         "arbeidssituasjon" to melding.arbeidssituasjon.somMapUtskriftvennlig(),
                         "antallDagerBruktIÅr" to melding.antallDagerBruktIÅr,
@@ -225,6 +227,18 @@ private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, An
             "tilOgMed" to dateFormatter.format(it.tilOgMed)
         )
     }
+}
+
+private fun List<BarnUtvidet>.somMap(): List<Map<String, Any?>>{
+    return map{
+        mapOf<String, Any?>(
+            "navn" to it.navn,
+            "fødselsdato" to it.fødselsdato,
+            "aleneOmOmsorgen" to it.aleneOmOmsorgen,
+            "utvidetRett" to it.utvidetRett
+        )
+    }
+
 }
 
 private fun List<Fosterbarn>.somMapFosterbarn(): List<Map<String, Any?>> {

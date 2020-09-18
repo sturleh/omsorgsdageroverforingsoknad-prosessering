@@ -1,6 +1,5 @@
 package no.nav.helse.prosessering.v1.asynkron.deleOmsorgsdager
 
-import de.huxhorn.sulky.ulid.ULID
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
 import no.nav.helse.dokument.DokumentService
@@ -58,7 +57,8 @@ internal class CleanupStreamDeleOmsorgsdager(
                         val behovssekvens: Behovssekvens = cleanupMelding.tilK9Behovssekvens()
 
                         logger.info("Videresender journalført dele omsorgsdager til K9-Sak")
-                        logger.info("Behvossekvens som blir sendt til K9: {}", behovssekvens.serialiserTilData()) //TODO: Fjernes, kun for debug
+                        logger.info("Behovssekvens som blir sendt til K9: {}", behovssekvens.serialiserTilData()) //TODO: Fjernes, kun for debug
+
                         cleanupMelding.journalførtMelding.serialiserTilData()
                     }
                 }
@@ -70,7 +70,6 @@ internal class CleanupStreamDeleOmsorgsdager(
 }
 
 private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
-    val id: String = ULID().nextULID()
     val correlationId = this.metadata.correlationId
     val journalPostIdListe = listOf<String>(this.journalførtMelding.journalpostId)
 
@@ -92,11 +91,10 @@ private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
     val omsorgsdagerÅOverføre = melding.antallDagerSomSkalOverføres
     val kilde = OverføreOmsorgsdagerBehov.Kilde.Digital
 
-    //TODO Noe for å mappe om de to ulike listene med Barn og AndreBarn til en felles liste av K9Barn
-    val listeOverBarn = tilK9Barn(melding.barn)
+    val listeOverBarn = melding.barn.tilK9Barn()
 
     val behovssekvens: Behovssekvens = Behovssekvens(
-        id = id,
+        id = melding.id,
         correlationId = correlationId,
         behov = *arrayOf(
             OverføreOmsorgsdagerBehov(
@@ -114,8 +112,17 @@ private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
     return behovssekvens
 }
 
-internal fun tilK9Barn(barn: List<BarnUtvidet>) : List<OverføreOmsorgsdagerBehov.Barn>{
+internal fun List<BarnUtvidet>.tilK9Barn() : List<OverføreOmsorgsdagerBehov.Barn>{
     var listeOverBarn: MutableList<OverføreOmsorgsdagerBehov.Barn> = mutableListOf()
-
+    forEach {
+        listeOverBarn.add(
+            OverføreOmsorgsdagerBehov.Barn(
+                identitetsnummer = it.identitetsnummer,
+                fødselsdato = it.fødselsdato,
+                aleneOmOmsorgen = it.aleneOmOmsorgen,
+                utvidetRett = it.utvidetRett
+            )
+        )
+    }
     return listeOverBarn
 }

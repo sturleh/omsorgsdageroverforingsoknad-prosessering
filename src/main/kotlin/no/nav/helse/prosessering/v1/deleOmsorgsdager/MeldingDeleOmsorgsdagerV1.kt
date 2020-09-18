@@ -12,6 +12,7 @@ data class MeldingDeleOmsorgsdagerV1(
     val mottatt: ZonedDateTime,
     val søker: Søker,
     val språk: String,
+    val id: String,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val barn: List<BarnUtvidet>,
@@ -39,7 +40,7 @@ enum class Mottaker(val utskriftsvennlig: String) {
 }
 
 data class BarnUtvidet(
-    var identitetsnummer: String?, //TODO Ikke nullable i fremtiden
+    var identitetsnummer: String,
     val aktørId: String?,
     val fødselsdato: LocalDate,
     val navn: String,

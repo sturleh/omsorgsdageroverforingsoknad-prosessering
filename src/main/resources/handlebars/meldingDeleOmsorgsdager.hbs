@@ -11,9 +11,7 @@
     <bookmarks>
         <bookmark name="Søker" href="#søker" />
         <bookmark name="Samtykke" href="#samtykke" />
-        <bookmark name="Andre barn" href="#andreBarn" />
-        <bookmark name="Har aleneomsorg" href="#aleneomsorg" />
-        <bookmark name="Har utvidet rett" href="#utvidetRett" />
+        <bookmark name="Barn" href="#barn" />
         <bookmark name="Din situasjon" href="#dinSituasjon" />
         <bookmark name="Mottaker" href="#mottaker" />
     </bookmarks>
@@ -40,62 +38,22 @@
         </p>
     </div>
 
-    <!-- ANDRE_BARN -->
-    <section id="andreBarn">
-        <h2>Andre barn</h2>
-        {{#each andreBarn as |andreBarn|~}}
+    <!-- BARN -->
+    <section id="barn">
+        <h2>Barn</h2>
+        {{#each barn as | barn|~}}
             <ul>
                 <li>
-                    <p>{{andreBarn.navn}}, {{andreBarn.fødselsdato}} ({{andreBarn.fnr}})</p>
+                    <p><b>{{barn.navn}} ({{barn.fødselsdato}})</b></p>
+                    {{#if barn.aleneOmOmsorgen}}
+                        <p>Er alene om omsorgen.</p>
+                    {{/if}}
+                    {{#if barn.utvidetRett}}
+                        <p>Har utvidet rett.</p>
+                    {{/if}}
                 </li>
             </ul>
         {{/each}}
-    </section>
-
-    <!-- ALENEOMSORG -->
-    <section id="aleneomsorg">
-        <h2>Aleneomsorg</h2>
-        <p class="sporsmalstekst">Har aleneomsorg?</p>
-        <p >{{ jaNeiSvar harAleneomsorg }}</p>
-        {{#if harAleneomsorg}}
-            {{#each harAleneomsorgFor.barn as | barn|~}}
-                <ul>
-                    <li>
-                        <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
-                    </li>
-                </ul>
-            {{/each}}
-            {{#each harAleneomsorgFor.andreBarn as | barn|~}}
-                <ul>
-                    <li>
-                        <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
-                    </li>
-                </ul>
-            {{/each}}
-        {{/if}}
-    </section>
-
-    <!-- UTVIDET_RETT -->
-    <section id="utvidetRett">
-        <h2>Utvidet rett</h2>
-        <p class="sporsmalstekst">Har utvidet rett?</p>
-        <p >{{ jaNeiSvar harUtvidetRett }}</p>
-        {{#if harUtvidetRett}}
-            {{#each harUtvidetRettFor.barn as | barn|~}}
-            <ul>
-                <li>
-                    <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
-                </li>
-            </ul>
-            {{/each}}
-            {{#each harUtvidetRettFor.andreBarn as | barn|~}}
-                <ul>
-                    <li>
-                        <p class="navn">{{barn.navn}}, ({{barn.fødselsdato}}) </p>
-                    </li>
-                </ul>
-            {{/each}}
-        {{/if}}
     </section>
 
     <!-- DIN_SITUASJON -->
@@ -145,6 +103,7 @@
 <!-- FOOTER -->
 <p id="footer">
     <span class="soknadsid">{{ soknad_id }}</span>
+    <span>K9:{{id}}</span>
     <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
 </p>
 </body>
