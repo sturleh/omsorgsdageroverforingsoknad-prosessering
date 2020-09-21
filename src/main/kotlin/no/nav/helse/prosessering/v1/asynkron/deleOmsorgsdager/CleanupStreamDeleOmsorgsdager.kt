@@ -13,7 +13,6 @@ import no.nav.k9.rapid.behov.Behovssekvens
 import no.nav.k9.rapid.behov.OverføreOmsorgsdagerBehov
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
-import org.json.JSONObject
 import org.slf4j.LoggerFactory
 
 
@@ -38,11 +37,14 @@ internal class CleanupStreamDeleOmsorgsdager(
         private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
             val fraCleanup = Topics.CLEANUP_DELE_OMSORGSDAGER
-            val tilJournalfort= Topics.K9_RAPID_V1 //TODO: Bytt til K9_RAPID_V1
+            val tilJournalfort= Topics.K9_RAPID_V1
 
             builder
                 .stream(fraCleanup.name, fraCleanup.consumed)
                 .filter { _, entry -> 1 == entry.metadata.version }
+                .selectKey{ key, value ->
+                    value.deserialiserTilCleanupDeleOmsorgsdager().meldingV1.id
+                }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         val cleanupMelding = entry.deserialiserTilCleanupDeleOmsorgsdager()
@@ -58,18 +60,11 @@ internal class CleanupStreamDeleOmsorgsdager(
                         val behovssekvens: Behovssekvens = cleanupMelding.tilK9Behovssekvens()
                         val (id, overføring) = behovssekvens.keyValue
 
-                        logger.info("Behovssekvens -> ID {}, Innhold {}", id, overføring) //TODO: Fjernes, kun for debug
-                        logger.info("Behovssekvens sendes til K9")
+                        logger.info("Behovssekvens med ID: {} sendes til K9", id)
 
-                        behovssekvens.serialiserTilData()
+                        Data(overføring)
                     }
                 }
-                .selectKey { key, value: TopicEntry ->
-                    val key = JSONObject(value.data.rawJson).getJSONObject("keyValue").getString("first")
-                    logger.info("Mapper om key fra søknadId til key fra behovsekvens------> {}", key)
-                    key
-                }
-                //.mapValues { value: TopicEntry -> JSONObject(value.data.rawJson).getJSONObject("keyValue").getString("second") }
                 .to(tilJournalfort.name, tilJournalfort.produced)
             return builder.build()
         }
@@ -91,7 +86,7 @@ private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
 
     val overførerTil: OverføreOmsorgsdagerBehov.OverførerTil = OverføreOmsorgsdagerBehov.OverførerTil(
         identitetsnummer = melding.mottakerFnr,
-        relasjon = melding.mottakerType.tilK9Rapid(),
+        relasjon = melding.mottakerType.tilK9Relasjon(),
         harBoddSammenMinstEttÅr = true
     )
 
@@ -99,7 +94,7 @@ private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
     val omsorgsdagerÅOverføre = melding.antallDagerSomSkalOverføres
     val kilde = OverføreOmsorgsdagerBehov.Kilde.Digital
 
-    val listeOverBarn = melding.barn.tilK9Barn()
+    val listeOverBarn = melding.barn.tilK9BarnListe()
 
     val behovssekvens: Behovssekvens = Behovssekvens(
         id = melding.id,
@@ -120,17 +115,13 @@ private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
     return behovssekvens
 }
 
-internal fun List<BarnUtvidet>.tilK9Barn() : List<OverføreOmsorgsdagerBehov.Barn>{
+internal fun List<BarnUtvidet>.tilK9BarnListe() : List<OverføreOmsorgsdagerBehov.Barn>{
     var listeOverBarn: MutableList<OverføreOmsorgsdagerBehov.Barn> = mutableListOf()
     forEach {
         listeOverBarn.add(
-            OverføreOmsorgsdagerBehov.Barn(
-                identitetsnummer = it.identitetsnummer,
-                fødselsdato = it.fødselsdato,
-                aleneOmOmsorgen = it.aleneOmOmsorgen,
-                utvidetRett = it.utvidetRett
-            )
+            it.tilK9Barn()
         )
     }
+
     return listeOverBarn
 }

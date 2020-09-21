@@ -5,7 +5,6 @@ import no.nav.common.KafkaEnvironment
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.asynkron.Data
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
-import no.nav.helse.prosessering.v1.asynkron.Topics
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_DELE_OMSORGSDAGER
@@ -25,7 +24,6 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.util.*
 import kotlin.test.assertEquals
@@ -134,7 +132,7 @@ fun KafkaConsumer<String, String>.hentJournalførtMeldingOverforeDager(
 }
 
 fun KafkaConsumer<String, String>.hentK9RapidMelding(
-    soknadId: String,
+    id: String,
     maxWaitInSeconds: Long = 20
 ): String {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
@@ -142,17 +140,14 @@ fun KafkaConsumer<String, String>.hentK9RapidMelding(
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
             .records(K9_RAPID_V1.name).toList()
-
-        entries.forEach {
-            LoggerFactory.getLogger("Testing ......").info("K9 Rapid Melding: {}", it)
-        }
+            .filter { it.key() == id }
 
         if (entries.isNotEmpty()) {
             assertEquals(1, entries.size)
             return entries.first().value()
         }
     }
-    throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
+    throw IllegalStateException("Fant ikke opprettet oppgave for melding med id: $id etter $maxWaitInSeconds sekunder.")
 }
 
 fun KafkaProducer<String, TopicEntry>.leggTilMottak(soknad: SøknadOverføreDagerV1) {

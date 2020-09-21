@@ -30,11 +30,10 @@ enum class Mottaker(val utskriftsvennlig: String) {
     @JsonProperty("ektefelle") EKTEFELLE("Ektefelle"),
     @JsonProperty("samboer") SAMBOER("Samboer");
 
-    fun tilK9Rapid(): OverføreOmsorgsdagerBehov.Relasjon {
-        //TODO Sjekk om dette kan gjøres penere, kanskje annet navn? Enkel return?
-        when(this){
-            EKTEFELLE -> return OverføreOmsorgsdagerBehov.Relasjon.NåværendeEktefelle
-            SAMBOER -> return OverføreOmsorgsdagerBehov.Relasjon.NåværendeSamboer
+    fun tilK9Relasjon(): OverføreOmsorgsdagerBehov.Relasjon {
+        return when(this){
+            EKTEFELLE -> OverføreOmsorgsdagerBehov.Relasjon.NåværendeEktefelle
+            SAMBOER -> OverføreOmsorgsdagerBehov.Relasjon.NåværendeSamboer
         }
     }
 }
@@ -46,4 +45,13 @@ data class BarnUtvidet(
     val navn: String,
     val aleneOmOmsorgen: Boolean,
     val utvidetRett: Boolean
-)
+) {
+    fun tilK9Barn() : OverføreOmsorgsdagerBehov.Barn{
+        return OverføreOmsorgsdagerBehov.Barn(
+            identitetsnummer = this.identitetsnummer,
+            fødselsdato = this.fødselsdato,
+            aleneOmOmsorgen = this.aleneOmOmsorgen,
+            utvidetRett = this.utvidetRett
+        )
+    }
+}

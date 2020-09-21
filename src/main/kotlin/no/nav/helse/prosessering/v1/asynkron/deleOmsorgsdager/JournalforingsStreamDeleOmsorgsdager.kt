@@ -63,8 +63,6 @@ internal class JournalforingsStreamDeleOmsorgsdager(
                             dokumenter = dokumenter
                         )
                         logger.info("Dokumenter til deling av  omsorgsdager journalført med ID = ${journaPostId.journalpostId}.")
-                        //TODO: Lage tilK9.....
-
 
                         val journalfort = JournalfortDeleOmsorgsdager(
                             journalpostId = journaPostId.journalpostId,
@@ -91,13 +89,13 @@ private fun PreprossesertDeleOmsorgsdagerV1.tilK9DeleOmsorgsdager(): Omsorgspeng
     val builder = OmsorgspengerOverføringSøknad.builder()
         .søknadId(SøknadId.of(soknadId))
         .mottattDato(mottatt)
-        .mottaker("12345678911".tilK9Mottaker()) //TODO: Fjernes, lagt på for test
+        .mottaker(this.mottakerFnr.tilK9Mottaker())
         .søker(søker.tilK9Søker())
 
     return builder.build()
 }
 
-private fun List<Fosterbarn>.tilK9Barn(): List<Barn> {
+private fun List<Fosterbarn>.tilK9BarnListe(): List<Barn> {
     return map {
         Barn.builder()
             .norskIdentitetsnummer(NorskIdentitetsnummer.of(it.fødselsnummer))

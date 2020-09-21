@@ -12,6 +12,7 @@ import kotlinx.coroutines.time.delay
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.k9.assertK9RapidFormat
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.BarnUtvidet
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
@@ -134,8 +135,8 @@ class DeleOmsorgsdagerProsesseringTest {
 
         kafkaTestProducerDeleOmsorgsdager.leggTilMottakDeleOmsorgsdager(søknad)
         journalføringsKonsumerDeleOmsorgsdager
-            .hentK9RapidMelding(søknad.søknadId)
-            .assertK9RapidFormat()
+            .hentK9RapidMelding(søknad.id)
+            .assertK9RapidFormat(søknad.id)
 
     }
 
@@ -154,8 +155,8 @@ class DeleOmsorgsdagerProsesseringTest {
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
         journalføringsKonsumerDeleOmsorgsdager
-            .hentK9RapidMelding(melding.søknadId)
-            .assertK9RapidFormat()
+            .hentK9RapidMelding(melding.id)
+            .assertK9RapidFormat(melding.id)
     }
 
     private fun gyldigMeldingDeleOmsorgsdager(
@@ -176,7 +177,16 @@ class DeleOmsorgsdagerProsesseringTest {
         id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
-        barn = listOf(),
+        barn = listOf(
+            BarnUtvidet(
+                identitetsnummer = "16012098999",
+                aktørId = "1234",
+                fødselsdato = LocalDate.parse("2020-01-01"),
+                navn = "Ole",
+                aleneOmOmsorgen = true,
+                utvidetRett = false
+            )
+        ),
         borINorge = true,
         arbeiderINorge = true,
         arbeidssituasjon = listOf(

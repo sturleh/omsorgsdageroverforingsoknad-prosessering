@@ -1,11 +1,11 @@
 package no.nav.helse.k9
 
+import no.nav.k9.rapid.behov.Behovssekvens
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 internal fun String.assertOverføreDagerFormat() {
     val rawJson = JSONObject(this)
@@ -26,15 +26,15 @@ internal fun String.assertOverføreDagerFormat() {
     JSONAssert.assertEquals(søknad.toString(), OmsorgspengerOverføringSøknad.SerDes.serialize(rekonstruertSøknad), true)
 }
 
-internal fun String.assertK9RapidFormat() {
-    val log: Logger = LoggerFactory.getLogger("assertK9RapidFormat")
+internal fun String.assertK9RapidFormat(id: String) {
     val rawJson = JSONObject(this)
 
-    log.info("Assert k9 rapid melding: {}", rawJson)
+    assertTrue(rawJson.getJSONArray("@behovsrekkefølge").getString(0) == "OverføreOmsorgsdager")
+    assertTrue(rawJson.getString("@type") == "Behovssekvens")
+    assertTrue(rawJson.getString("@id") == id)
 
-    val metadata = assertNotNull(rawJson.getJSONObject("metadata"))
-    assertNotNull(metadata.getString("correlationId"))
+    assertNotNull(rawJson.getString("@correlationId"))
+    assertNotNull(rawJson.getJSONObject("@behov"))
 
-    val data = assertNotNull(rawJson.getJSONObject("data"))
-
+    Behovssekvens
 }

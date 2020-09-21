@@ -91,7 +91,10 @@ data class CleanupDeleOmsorgsdager(
 class SerDes : Serializer<TopicEntry>, Deserializer<TopicEntry> {
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
     override fun close() {}
-    override fun serialize(topic: String, entry: TopicEntry): ByteArray = entry.rawJson.toByteArray()
+    override fun serialize(topic: String, entry: TopicEntry): ByteArray = when (topic == Topics.K9_RAPID_V1.name) {
+        true -> entry.data.rawJson.toByteArray()
+        false -> entry.rawJson.toByteArray()
+    }
     override fun deserialize(topic: String, entry: ByteArray): TopicEntry = TopicEntry(String(entry))
 }
 
@@ -108,7 +111,7 @@ internal fun Any.serialiserTilData() = Data(omsorgsdageroverførningKonfigurertM
 
 
 data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
-data class JournalfortDeleOmsorgsdager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad) //TODO Utvide K9 for dele omsorgsdager
+data class JournalfortDeleOmsorgsdager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad) //TODO Trenger egentlig ikke ha med OmsorgspengerOverføringSøknad
 
 data class TopicEntry(val rawJson: String) {
     constructor(metadata: Metadata, data: Data) : this(
