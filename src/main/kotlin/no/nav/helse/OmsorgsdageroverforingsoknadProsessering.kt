@@ -4,19 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import io.ktor.application.Application
-import io.ktor.application.ApplicationStopping
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.Url
-import io.ktor.jackson.jackson
-import io.ktor.response.respondText
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.jackson.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import io.ktor.util.*
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.helse.aktoer.AktoerGateway
 import no.nav.helse.auth.AccessTokenClientResolver
@@ -34,13 +28,8 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.prosessering.v1.PdfV1Generator
-import no.nav.helse.prosessering.v1.PreprosseseringV1Service
+import no.nav.helse.prosessering.v1.PreprosesseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.AsynkronProsesseringV1Service
-import no.nav.helse.prosessering.v1.asynkron.CleanupOverforeDager
-import no.nav.helse.prosessering.v1.asynkron.Data
-import no.nav.helse.prosessering.v1.asynkron.TopicEntry
-import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
-import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -77,7 +66,7 @@ fun Application.omsorgsdageroverforingsoknadProsessering() {
     )
     val dokumentService = DokumentService(dokumentGateway)
 
-    val preprosseseringV1Service = PreprosseseringV1Service(
+    val preprosesseringV1Service = PreprosesseringV1Service(
         pdfV1Generator = PdfV1Generator(),
         dokumentService = dokumentService
     )
@@ -89,7 +78,7 @@ fun Application.omsorgsdageroverforingsoknadProsessering() {
 
     val asynkronProsesseringV1Service = AsynkronProsesseringV1Service(
         kafkaConfig = configuration.getKafkaConfig(),
-        preprosseseringV1Service = preprosseseringV1Service,
+        preprosesseringV1Service = preprosesseringV1Service,
         joarkGateway = joarkGateway,
         dokumentService = dokumentService
     )

@@ -12,7 +12,7 @@ import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.K9_RAPID_V1
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_OVERFOREDAGER
-import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT_DELE_OMSORGSDAGER
+import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSESSERT_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
@@ -44,7 +44,7 @@ object KafkaWrapper {
                 JOURNALFORT_OVERFOREDAGER.name,
                 CLEANUP_OVERFOREDAGER.name,
                 MOTTATT_DELE_OMSORGSDAGER.name,
-                PREPROSSESERT_DELE_OMSORGSDAGER.name,
+                PREPROSESSERT_DELE_OMSORGSDAGER.name,
                 JOURNALFORT_DELE_OMSORGSDAGER.name,
                 CLEANUP_DELE_OMSORGSDAGER.name,
                 K9_RAPID_V1.name

@@ -39,7 +39,7 @@ private val fordelingSamboerEllerEktefelleCounter = Counter.build()
     .labelNames("spm", "svar")
     .register()
 
-internal fun PreprossesertDeleOmsorgsdagerV1.reportMetrics() {
+internal fun PreprosessertDeleOmsorgsdagerV1.reportMetrics() {
     antallDeleOmsorgsdagerHistogram.observe(antallDagerSomSkalOverføres.toDouble())
 
     jaNeiUtvidetRettCounter.labels("utvidetRett", barn.harNoenUtvidetRett().tilJaEllerNei()).inc()

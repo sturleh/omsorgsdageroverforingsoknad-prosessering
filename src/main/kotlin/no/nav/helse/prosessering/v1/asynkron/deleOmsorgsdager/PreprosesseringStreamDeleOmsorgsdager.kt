@@ -4,23 +4,23 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.PreprosseseringV1Service
-import no.nav.helse.prosessering.v1.asynkron.*
+import no.nav.helse.prosessering.v1.PreprosesseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.Topics
+import no.nav.helse.prosessering.v1.asynkron.deserialiserTilMeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.asynkron.process
 import no.nav.helse.prosessering.v1.asynkron.serialiserTilData
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
 
-internal class PreprosseseringStreamDeleOmsorgsdager(
-    preprosseseringV1Service: PreprosseseringV1Service,
+internal class PreprosesseringStreamDeleOmsorgsdager(
+    preprosesseringV1Service: PreprosesseringV1Service,
     kafkaConfig: KafkaConfig
 ) {
     private val stream = ManagedKafkaStreams(
         name = NAME,
         properties = kafkaConfig.stream(NAME),
-        topology = topology(preprosseseringV1Service),
+        topology = topology(preprosesseringV1Service),
         unreadyAfterStreamStoppedIn = kafkaConfig.unreadyAfterStreamStoppedIn
     )
 
@@ -32,10 +32,10 @@ internal class PreprosseseringStreamDeleOmsorgsdager(
         private const val NAME = "PreprosesseringStreamDeleOmsorgsdager"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
-        private fun topology(preprosseseringV1Service: PreprosseseringV1Service): Topology {
+        private fun topology(preprosesseringV1Service: PreprosesseringV1Service): Topology {
             val builder = StreamsBuilder()
             val fromMottatt = Topics.MOTTATT_DELE_OMSORGSDAGER
-            val tilPreprossesert = Topics.PREPROSSESERT_DELE_OMSORGSDAGER
+            val tilPreprossesert = Topics.PREPROSESSERT_DELE_OMSORGSDAGER
 
             builder
                 .stream(fromMottatt.name, fromMottatt.consumed)
@@ -43,7 +43,7 @@ internal class PreprosseseringStreamDeleOmsorgsdager(
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         logger.info("Preprosesserer melding om deling av omsorgsdager.")
-                        val preprossesertMelding = preprosseseringV1Service.preprosseserMeldingDeleOmsorgsdager(
+                        val preprossesertMelding = preprosesseringV1Service.preprosesserMeldingDeleOmsorgsdager(
                             melding = entry.deserialiserTilMeldingDeleOmsorgsdagerV1(),
                             metadata = entry.metadata
                         )

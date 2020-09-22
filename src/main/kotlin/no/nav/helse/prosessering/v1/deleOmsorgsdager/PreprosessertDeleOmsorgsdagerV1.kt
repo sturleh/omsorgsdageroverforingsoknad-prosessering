@@ -6,7 +6,7 @@ import no.nav.helse.prosessering.v1.overforeDager.PreprossesertSøker
 import java.net.URI
 import java.time.ZonedDateTime
 
-data class PreprossesertDeleOmsorgsdagerV1(
+data class PreprosessertDeleOmsorgsdagerV1(
     val soknadId: String,
     val mottatt: ZonedDateTime,
     val søker: PreprossesertSøker,

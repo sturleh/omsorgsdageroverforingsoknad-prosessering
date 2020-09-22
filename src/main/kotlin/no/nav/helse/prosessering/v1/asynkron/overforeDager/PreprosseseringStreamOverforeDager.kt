@@ -4,7 +4,7 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.PreprosseseringV1Service
+import no.nav.helse.prosessering.v1.PreprosesseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.Topics
 import no.nav.helse.prosessering.v1.asynkron.deserialiserTilSøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.asynkron.process
@@ -14,13 +14,13 @@ import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
 
 internal class PreprosseseringStreamOverforeDager(
-    preprosseseringV1Service: PreprosseseringV1Service,
+    preprosesseringV1Service: PreprosesseringV1Service,
     kafkaConfig: KafkaConfig
 ) {
     private val stream = ManagedKafkaStreams(
         name = NAME,
         properties = kafkaConfig.stream(NAME),
-        topology = topology(preprosseseringV1Service),
+        topology = topology(preprosesseringV1Service),
         unreadyAfterStreamStoppedIn = kafkaConfig.unreadyAfterStreamStoppedIn
     )
 
@@ -32,7 +32,7 @@ internal class PreprosseseringStreamOverforeDager(
         private const val NAME = "PreprosesseringV1OverforeDager"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
-        private fun topology(preprosseseringV1Service: PreprosseseringV1Service): Topology {
+        private fun topology(preprosesseringV1Service: PreprosesseringV1Service): Topology {
             val builder = StreamsBuilder()
             val fromMottatt = Topics.MOTTATT_OVERFOREDAGER
             val tilPreprossesert = Topics.PREPROSSESERT_OVERFOREDAGER
@@ -43,7 +43,7 @@ internal class PreprosseseringStreamOverforeDager(
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         logger.info("Preprosesserer søknad for overføring av dager.")
-                        val preprossesertMelding = preprosseseringV1Service.preprosseserOverforeDager(
+                        val preprossesertMelding = preprosesseringV1Service.preprosseserOverforeDager(
                             melding = entry.deserialiserTilSøknadOverføreDagerV1(),
                             metadata = entry.metadata
                         )

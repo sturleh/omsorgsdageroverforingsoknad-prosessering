@@ -6,20 +6,20 @@ import no.nav.helse.dokument.DokumentService
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.PreprossesertDeleOmsorgsdagerV1
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.PreprosessertDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.reportMetrics
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.reportMetrics
 import org.slf4j.LoggerFactory
 
-internal class PreprosseseringV1Service(
+internal class PreprosesseringV1Service(
     private val pdfV1Generator: PdfV1Generator,
     private val dokumentService: DokumentService
 ) {
 
     private companion object {
-        private val logger = LoggerFactory.getLogger(PreprosseseringV1Service::class.java)
+        private val logger = LoggerFactory.getLogger(PreprosesseringV1Service::class.java)
     }
 
     internal suspend fun preprosseserOverforeDager(
@@ -77,12 +77,12 @@ internal class PreprosseseringV1Service(
         return preprossesertMeldingV1OverforeDager
     }
 
-    internal suspend fun preprosseserMeldingDeleOmsorgsdager(
+    internal suspend fun preprosesserMeldingDeleOmsorgsdager(
         melding: MeldingDeleOmsorgsdagerV1,
         metadata: Metadata
-    ): PreprossesertDeleOmsorgsdagerV1 {
+    ): PreprosessertDeleOmsorgsdagerV1 {
         val søknadId = SoknadId(melding.søknadId)
-        logger.info("Preprosseserer melding om deling av omsorgsdager med søknadsId: $søknadId")
+        logger.info("Preprosesserer melding om deling av omsorgsdager med søknadsId: $søknadId")
 
         val correlationId = CorrelationId(metadata.correlationId)
 
@@ -120,14 +120,14 @@ internal class PreprosseseringV1Service(
 
         logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 
-        val preprossesertDeleOmsorgsdagerV1 = PreprossesertDeleOmsorgsdagerV1(
+        val preprosessertDeleOmsorgsdagerV1 = PreprosessertDeleOmsorgsdagerV1(
                 melding = melding,
                 søkerAktørId = søkerAktørId,
                 dokumentUrls = komplettDokumentUrls.toList()
             )
 
-        preprossesertDeleOmsorgsdagerV1.reportMetrics()
-        return preprossesertDeleOmsorgsdagerV1
+        preprosessertDeleOmsorgsdagerV1.reportMetrics()
+        return preprosessertDeleOmsorgsdagerV1
     }
 
 }

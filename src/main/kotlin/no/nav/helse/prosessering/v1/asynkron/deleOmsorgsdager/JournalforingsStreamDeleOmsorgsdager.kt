@@ -33,16 +33,16 @@ internal class JournalforingsStreamDeleOmsorgsdager(
 
         private fun topology(joarkGateway: JoarkGateway): Topology {
             val builder = StreamsBuilder()
-            val fraPreprossesertV1 = Topics.PREPROSSESERT_DELE_OMSORGSDAGER
+            val fraPreprosessertV1 = Topics.PREPROSESSERT_DELE_OMSORGSDAGER
             val tilCleanup = Topics.CLEANUP_DELE_OMSORGSDAGER
 
             val mapValues = builder
-                .stream(fraPreprossesertV1.name, fraPreprossesertV1.consumed)
+                .stream(fraPreprosessertV1.name, fraPreprosessertV1.consumed)
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         val preprosessertMelding =
-                            entry.deserialiserTilPreprossesertDeleOmsorgsdagerV1()
+                            entry.deserialiserTilPreprosessertDeleOmsorgsdagerV1()
 
                         val dokumenter = preprosessertMelding.dokumentUrls
                         logger.info("Journalfører deling av omsorgsdager dokumenter: {}", dokumenter)

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.omsorgsdageroverførningKonfigurertMapper
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
-import no.nav.helse.prosessering.v1.deleOmsorgsdager.PreprossesertDeleOmsorgsdagerV1
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.PreprosessertDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
@@ -53,7 +53,7 @@ internal object Topics {
         serDes = SerDes()
     )
 
-    val PREPROSSESERT_DELE_OMSORGSDAGER = Topic(
+    val PREPROSESSERT_DELE_OMSORGSDAGER = Topic(
         name = "privat-dele-omsorgsdager-melding-preprossesert",
         serDes = SerDes()
     )
@@ -84,7 +84,7 @@ data class CleanupOverforeDager(
 
 data class CleanupDeleOmsorgsdager(
     val metadata: Metadata,
-    val meldingV1: PreprossesertDeleOmsorgsdagerV1,
+    val meldingV1: PreprosessertDeleOmsorgsdagerV1,
     val journalførtMelding: JournalfortDeleOmsorgsdager
 )
 
@@ -103,7 +103,7 @@ internal fun TopicEntry.deserialiserTilPreprossesertOverforeDagerV1():Preprosses
 internal fun TopicEntry.deserialiserTilCleanupOverforeDager():CleanupOverforeDager  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
 
 internal fun TopicEntry.deserialiserTilMeldingDeleOmsorgsdagerV1(): MeldingDeleOmsorgsdagerV1 = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
-internal fun TopicEntry.deserialiserTilPreprossesertDeleOmsorgsdagerV1():PreprossesertDeleOmsorgsdagerV1  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
+internal fun TopicEntry.deserialiserTilPreprosessertDeleOmsorgsdagerV1():PreprosessertDeleOmsorgsdagerV1  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
 internal fun TopicEntry.deserialiserTilCleanupDeleOmsorgsdager():CleanupDeleOmsorgsdager  = omsorgsdageroverførningKonfigurertMapper().readValue(data.rawJson)
 
 
