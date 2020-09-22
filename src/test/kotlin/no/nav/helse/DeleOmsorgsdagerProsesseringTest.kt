@@ -193,7 +193,7 @@ class DeleOmsorgsdagerProsesseringTest {
             Arbeidssituasjon.ARBEIDSTAKER
         ),
         antallDagerBruktIÅr = 10,
-        mottakerType = Mottaker.EKTEFELLE,
+        mottakerType = Mottaker.SAMBOER,
         mottakerFnr = "$gyldigFodselsnummerB",
         mottakerNavn = "Navn Mottaker",
         antallDagerSomSkalOverføres = 5
