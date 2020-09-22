@@ -7,6 +7,7 @@ import no.nav.k9.rapid.behov.OverføreOmsorgsdagerBehov
 import org.junit.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class K9BehovssekvensTest {
 
@@ -32,10 +33,7 @@ class K9BehovssekvensTest {
 
         val k9Barn = barn.tilK9Barn()
 
-        assertEquals(barn.identitetsnummer, k9Barn.identitetsnummer)
-        assertEquals(barn.aleneOmOmsorgen, k9Barn.aleneOmOmsorgen)
-        assertEquals(barn.utvidetRett, k9Barn.utvidetRett)
-        assertEquals(barn.fødselsdato, k9Barn.fødselsdato)
+        assertTrue(barn erSammeBarnSom k9Barn)
     }
 
     @Test
@@ -61,11 +59,16 @@ class K9BehovssekvensTest {
 
         val listeOverK9Barn = listeOverBarn.tilK9BarnListe()
 
-        assertEquals(listeOverBarn[0].identitetsnummer, listeOverK9Barn[0].identitetsnummer)
-        assertEquals(listeOverBarn[0].fødselsdato, listeOverK9Barn[0].fødselsdato)
-
-        assertEquals(listeOverBarn[1].identitetsnummer, listeOverK9Barn[1].identitetsnummer)
-        assertEquals(listeOverBarn[1].fødselsdato, listeOverK9Barn[1].fødselsdato)
+        assertTrue(listeOverBarn[0] erSammeBarnSom listeOverK9Barn[0])
+        assertTrue(listeOverBarn[1] erSammeBarnSom listeOverK9Barn[1])
+        assertEquals(listeOverBarn.size, listeOverK9Barn.size)
     }
 
+    private infix fun BarnUtvidet.erSammeBarnSom(k9Barn: OverføreOmsorgsdagerBehov.Barn): Boolean{
+        return  this.identitetsnummer == k9Barn.identitetsnummer &&
+                this.fødselsdato == k9Barn.fødselsdato &&
+                this.utvidetRett == k9Barn.utvidetRett &&
+                this.aleneOmOmsorgen == k9Barn.aleneOmOmsorgen
+
+    }
 }
