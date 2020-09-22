@@ -9,6 +9,7 @@ import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
 import no.nav.helse.prosessering.v1.asynkron.*
 import no.nav.helse.prosessering.v1.deleOmsorgsdager.BarnUtvidet
+import no.nav.helse.prosessering.v1.deleOmsorgsdager.Mottaker
 import no.nav.k9.rapid.behov.Behovssekvens
 import no.nav.k9.rapid.behov.OverføreOmsorgsdagerBehov
 import org.apache.kafka.streams.StreamsBuilder
@@ -87,7 +88,9 @@ private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
     val overførerTil: OverføreOmsorgsdagerBehov.OverførerTil = OverføreOmsorgsdagerBehov.OverførerTil(
         identitetsnummer = melding.mottakerFnr,
         relasjon = melding.mottakerType.tilK9Relasjon(),
-        harBoddSammenMinstEttÅr = true
+        harBoddSammenMinstEttÅr = melding.mottakerType.let {
+            if(it == Mottaker.SAMBOER) true else null
+        }
     )
 
     val omsorgsdagerTattUtIÅr = melding.antallDagerBruktIÅr
