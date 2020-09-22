@@ -111,7 +111,7 @@ internal fun Any.serialiserTilData() = Data(omsorgsdageroverførningKonfigurertM
 
 
 data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
-data class JournalfortDeleOmsorgsdager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad) //TODO Trenger egentlig ikke ha med OmsorgspengerOverføringSøknad
+data class JournalfortDeleOmsorgsdager(val journalpostId: String)
 
 data class TopicEntry(val rawJson: String) {
     constructor(metadata: Metadata, data: Data) : this(
