@@ -49,15 +49,15 @@ internal class CleanupStreamDeleOmsorgsdager(
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         val cleanupMelding = entry.deserialiserTilCleanupDeleOmsorgsdager()
-                        logger.info("Sletter dele omsorgsdager dokumenter.")
+                        logger.trace("Sletter dele omsorgsdager dokumenter.")
                         dokumentService.slettDokumeter(
                             urlBolks = cleanupMelding.meldingV1.dokumentUrls,
                             aktørId = AktørId(cleanupMelding.meldingV1.søker.aktørId),
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
-                        logger.info("Dokumenter slettet.")
+                        logger.trace("Dokumenter slettet.")
 
-                        logger.info("Mapper om til Behovssekvens")
+                        logger.trace("Mapper om til Behovssekvens")
                         val behovssekvens: Behovssekvens = cleanupMelding.tilK9Behovssekvens()
                         val (id, overføring) = behovssekvens.keyValue
 

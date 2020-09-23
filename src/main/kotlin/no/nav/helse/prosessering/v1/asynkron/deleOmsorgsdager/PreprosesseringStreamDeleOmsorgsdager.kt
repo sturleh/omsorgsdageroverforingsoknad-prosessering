@@ -42,7 +42,7 @@ internal class PreprosesseringStreamDeleOmsorgsdager(
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
-                        logger.info("Preprosesserer melding om deling av omsorgsdager.")
+                        logger.trace("Preprosesserer melding om deling av omsorgsdager.")
                         val preprossesertMelding = preprosesseringV1Service.preprosesserMeldingDeleOmsorgsdager(
                             melding = entry.deserialiserTilMeldingDeleOmsorgsdagerV1(),
                             metadata = entry.metadata

@@ -90,27 +90,27 @@ internal class PreprosesseringV1Service(
 
         logger.info("Søkerens AktørID = $søkerAktørId")
 
-        logger.info("Genererer Oppsummerings-PDF av meldingen.")
+        logger.trace("Genererer Oppsummerings-PDF av meldingen.")
         val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdfDeleOmsorgsdager(melding)
-        logger.info("Generering av Oppsummerings-PDF OK.")
+        logger.trace("Generering av Oppsummerings-PDF OK.")
 
-        logger.info("Mellomlagrer Oppsummerings-PDF.")
+        logger.trace("Mellomlagrer Oppsummerings-PDF.")
         val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
             pdf = soknadOppsummeringPdf,
             correlationId = correlationId,
             aktørId = søkerAktørId,
             dokumentbeskrivelse = "Melding om deling av omsorgsdager"
         )
-        logger.info("Mellomlagring av Oppsummerings-PDF OK")
+        logger.trace("Mellomlagring av Oppsummerings-PDF OK")
 
-        logger.info("Mellomlagrer Oppsummerings-JSON")
+        logger.trace("Mellomlagrer Oppsummerings-JSON")
 
         val soknadJsonUrl = dokumentService.lagreDeleOmsorgsdagerMelding(
             melding = melding,
             aktørId = søkerAktørId,
             correlationId = correlationId
         )
-        logger.info("Mellomlagrer Oppsummerings-JSON OK.")
+        logger.trace("Mellomlagrer Oppsummerings-JSON OK.")
 
         val komplettDokumentUrls = mutableListOf(
             listOf(soknadOppsummeringPdfUrl,
