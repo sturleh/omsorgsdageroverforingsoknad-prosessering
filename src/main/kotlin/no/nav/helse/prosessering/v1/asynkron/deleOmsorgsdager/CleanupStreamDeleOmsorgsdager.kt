@@ -73,7 +73,7 @@ internal class CleanupStreamDeleOmsorgsdager(
     internal fun stop() = stream.stop(becauseOfError = false)
 }
 
-private fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
+internal fun CleanupDeleOmsorgsdager.tilK9Behovssekvens(): Behovssekvens {
     val correlationId = this.metadata.correlationId
     val journalPostIdListe = listOf<String>(this.journalførtMelding.journalpostId)
 
