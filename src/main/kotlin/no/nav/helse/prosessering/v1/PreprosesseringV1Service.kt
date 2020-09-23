@@ -118,7 +118,7 @@ internal class PreprosesseringV1Service(
             )
         )
 
-        logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
+        logger.trace("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 
         val preprosessertDeleOmsorgsdagerV1 = PreprosessertDeleOmsorgsdagerV1(
                 melding = melding,
