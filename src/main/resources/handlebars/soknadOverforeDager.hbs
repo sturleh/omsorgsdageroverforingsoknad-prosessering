@@ -35,13 +35,15 @@
             <p>{{ søker.fødselsnummer }}<br /></p>
         </div>
 
-        <!-- Melding -->
+        <!-- Overføring -->
         <section id="overføring">
             <h2>Overføring</h2>
             <p class="sporsmalstekst">Hvem skal dagene overføres til? </p>
             <p>{{navnMottaker}} ({{fnrMottaker}})</p>
+            <hr />
             <p class="sporsmalstekst">Hvor mange dager skal overføres?</p>
             <p>{{antallDager}}</p>
+            <hr />
             {{#if stengingsperiode}}
                 <p class="sporsmalstekst">Hvilken periode gjelder overføringen for?</p>
                 <p>{{stengingsperiode}}</p>
@@ -55,9 +57,9 @@
                 {{# each fosterbarnListe.fosterbarn as |barn|}}
                     <div class="person">
                         <div class="id">
+                            <p>Fødselsnummer:</p>
                             {{ barn.fnr }}
                         </div>
-                        <br/>
                     </div>
                 {{/each}}
             {{/if}}
