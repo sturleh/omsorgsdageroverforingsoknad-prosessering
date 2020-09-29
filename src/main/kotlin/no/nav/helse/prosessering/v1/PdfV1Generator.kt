@@ -13,6 +13,7 @@ import no.nav.helse.prosessering.v1.deleOmsorgsdager.MeldingDeleOmsorgsdagerV1
 import no.nav.helse.prosessering.v1.overforeDager.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -163,7 +164,8 @@ internal class PdfV1Generator {
                         ),
                         "hjelp" to mapOf(
                             "språk" to melding.språk?.sprakTilTekst()
-                        )
+                        ),
+                        "erDet2020Fortsatt" to sjekkOmDetEr2020()
                     )
                 )
                 .resolver(MapValueResolver.INSTANCE)
@@ -209,6 +211,9 @@ internal class PdfV1Generator {
                 false
             )
 }
+
+private fun sjekkOmDetEr2020(): Boolean = LocalDate.now().year == 2020 //TODO: Dette kan fjernes etter 1.1.2021 og oppdateres i pdf
+
 
 private fun List<Arbeidssituasjon>.somMapUtskriftvennlig(): List<Map<String, Any?>> {
     return map {

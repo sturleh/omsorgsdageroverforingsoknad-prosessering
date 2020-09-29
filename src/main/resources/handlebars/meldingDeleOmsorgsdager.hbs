@@ -73,7 +73,11 @@
                 {{/each}}
             {{/if}}
         </p>
-        <p class="sporsmalstekst">Hvor mange omsorgsdager har du brukt etter 1. juli 2020/ i år?</p>
+        {{#if erDet2020Fortsatt}}
+            <p class="sporsmalstekst">Hvor mange omsorgsdager har du brukt etter 1. juli 2020?</p>
+        {{else}}
+            <p class="sporsmalstekst">Hvor mange omsorgsdager har du brukt i år?</p>
+        {{/if}}
         <p>{{antallDagerBruktIÅr}}</p>
     </section>
 
