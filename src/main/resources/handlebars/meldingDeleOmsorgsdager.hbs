@@ -44,12 +44,12 @@
         {{#each barn as | barn|~}}
             <ul>
                 <li>
-                    <p><b>{{barn.navn}} ({{barn.fødselsdato}})</b></p>
+                    <p><b>{{barn.navn}} (født {{barn.fødselsdato}}, fødselsnummer {{barn.fnr}})</b></p>
                     {{#if barn.aleneOmOmsorgen}}
                         <p>Er alene om omsorgen.</p>
                     {{/if}}
                     {{#if barn.utvidetRett}}
-                        <p>Har utvidet rett.</p>
+                        <p>Har fått ekstra dager på grunn av kronisk sykdom eller funksjonshemning.</p>
                     {{/if}}
                 </li>
             </ul>

@@ -239,6 +239,7 @@ private fun List<BarnUtvidet>.somMap(): List<Map<String, Any?>>{
         mapOf<String, Any?>(
             "navn" to it.navn,
             "fødselsdato" to it.fødselsdato,
+            "fnr" to it.identitetsnummer,
             "aleneOmOmsorgen" to it.aleneOmOmsorgen,
             "utvidetRett" to it.utvidetRett
         )

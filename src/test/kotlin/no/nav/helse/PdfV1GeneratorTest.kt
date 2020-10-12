@@ -81,7 +81,7 @@ class PdfV1GeneratorTest {
             BarnUtvidet(
                 navn = "Rå Alv",
                 fødselsdato = LocalDate.parse("2020-01-01"),
-                identitetsnummer = "12345",
+                identitetsnummer = "02047816826",
                 aktørId = "1234",
                 aleneOmOmsorgen = true,
                 utvidetRett = true
@@ -89,7 +89,7 @@ class PdfV1GeneratorTest {
             BarnUtvidet(
                 navn = "Berit Ustad",
                 fødselsdato = LocalDate.parse("2020-01-01"),
-                identitetsnummer = "12345",
+                identitetsnummer = "02047816826",
                 aktørId = "1234",
                 aleneOmOmsorgen = true,
                 utvidetRett = true
@@ -115,7 +115,7 @@ class PdfV1GeneratorTest {
         )
         if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
 
-        id = "2-full-søknad-dele-omsorgsdager"
+        id = "2-full-melding-dele-omsorgsdager"
         pdf = generator.generateSoknadOppsummeringPdfDeleOmsorgsdager(
             melding = gyldigMeldingDeleOmsorgsdager()
         )
