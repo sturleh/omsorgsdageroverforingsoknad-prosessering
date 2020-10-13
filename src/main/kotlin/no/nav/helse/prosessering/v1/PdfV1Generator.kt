@@ -238,7 +238,7 @@ private fun List<BarnUtvidet>.somMap(): List<Map<String, Any?>>{
     return map{
         mapOf<String, Any?>(
             "navn" to it.navn,
-            "fødselsdato" to it.fødselsdato,
+            "fødselsdato" to DateTimeFormatter.ofPattern("dd.MM.yyyy").format(it.fødselsdato),
             "fnr" to it.identitetsnummer,
             "aleneOmOmsorgen" to it.aleneOmOmsorgen,
             "utvidetRett" to it.utvidetRett
