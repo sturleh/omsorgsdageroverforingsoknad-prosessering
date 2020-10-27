@@ -3,6 +3,7 @@ package no.nav.helse.prosessering.v1.asynkron.deleOmsorgsdager
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
 import no.nav.helse.joark.JoarkGateway
+import no.nav.helse.joark.Navn
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
@@ -51,7 +52,12 @@ internal class JournalforingsStreamDeleOmsorgsdager(
                             aktørId = AktørId(preprosessertMelding.søker.aktørId),
                             norskIdent = preprosessertMelding.søker.fødselsnummer,
                             correlationId = CorrelationId(entry.metadata.correlationId),
-                            dokumenter = dokumenter
+                            dokumenter = dokumenter,
+                            navn = Navn(
+                                fornavn = preprosessertMelding.søker.fornavn,
+                                mellomnavn = preprosessertMelding.søker.mellomnavn,
+                                etternavn = preprosessertMelding.søker.etternavn
+                            )
                         )
                         logger.info("Dokumenter til deling av  omsorgsdager journalført med ID = ${journaPostId.journalpostId}.")
 
