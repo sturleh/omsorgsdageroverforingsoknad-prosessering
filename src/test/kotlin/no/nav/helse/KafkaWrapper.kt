@@ -7,7 +7,6 @@ import no.nav.helse.prosessering.v1.asynkron.Data
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
-import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.K9_RAPID_V2
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_DELE_OMSORGSDAGER
@@ -45,7 +44,6 @@ object KafkaWrapper {
                 CLEANUP_OVERFOREDAGER.name,
                 MOTTATT_DELE_OMSORGSDAGER.name,
                 PREPROSESSERT_DELE_OMSORGSDAGER.name,
-                JOURNALFORT_DELE_OMSORGSDAGER.name,
                 CLEANUP_DELE_OMSORGSDAGER.name,
                 K9_RAPID_V2.name
             )

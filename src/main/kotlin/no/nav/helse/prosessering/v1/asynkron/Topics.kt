@@ -63,11 +63,6 @@ internal object Topics {
         serDes = SerDes()
     )
 
-    val JOURNALFORT_DELE_OMSORGSDAGER = Topic(
-        name = "privat-dele-omsorgsdager-journalfort",
-        serDes = SerDes()
-    )
-
     val K9_RAPID_V2 = Topic(
         name = "k9-rapid-v2",
         serDes = SerDes()

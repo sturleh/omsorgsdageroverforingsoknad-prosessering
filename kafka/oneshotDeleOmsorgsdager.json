@@ -86,35 +86,6 @@
       ],
       "numPartitions": 3,
       "topicName": "privat-dele-omsorgsdager-melding-cleanup"
-    },
-    {
-      "configEntries": {
-        "retention.ms": -1
-      },
-      "members": [
-        {
-          "member": "srvomsover-prs",
-          "role": "PRODUCER"
-        },
-        {
-          "member": "srvomsover-prs",
-          "role": "CONSUMER"
-        },
-        {
-          "member": "E157419",
-          "role": "MANAGER"
-        },
-        {
-          "member": "F154868",
-          "role": "MANAGER"
-        },
-        {
-          "member": "O158190",
-          "role": "MANAGER"
-        }
-      ],
-      "numPartitions": 3,
-      "topicName": "privat-dele-omsorgsdager-journalfort"
     }
   ]
 }
