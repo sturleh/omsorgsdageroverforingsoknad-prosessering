@@ -9,7 +9,7 @@ import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_OVERFOREDAGER
-import no.nav.helse.prosessering.v1.asynkron.Topics.K9_RAPID_V1
+import no.nav.helse.prosessering.v1.asynkron.Topics.K9_RAPID_V2
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_DELE_OMSORGSDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSESSERT_DELE_OMSORGSDAGER
@@ -47,7 +47,7 @@ object KafkaWrapper {
                 PREPROSESSERT_DELE_OMSORGSDAGER.name,
                 JOURNALFORT_DELE_OMSORGSDAGER.name,
                 CLEANUP_DELE_OMSORGSDAGER.name,
-                K9_RAPID_V1.name
+                K9_RAPID_V2.name
             )
         )
         return kafkaEnvironment
@@ -96,7 +96,7 @@ fun KafkaEnvironment.k9RapidConsumer(): KafkaConsumer<String, String> {
         StringDeserializer(),
         StringDeserializer()
     )
-    consumer.subscribe(listOf(K9_RAPID_V1.name))
+    consumer.subscribe(listOf(K9_RAPID_V2.name))
     return consumer
 }
 
@@ -139,7 +139,7 @@ fun KafkaConsumer<String, String>.hentK9RapidMelding(
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
-            .records(K9_RAPID_V1.name).toList()
+            .records(K9_RAPID_V2.name).toList()
             .filter { it.key() == id }
 
         if (entries.isNotEmpty()) {

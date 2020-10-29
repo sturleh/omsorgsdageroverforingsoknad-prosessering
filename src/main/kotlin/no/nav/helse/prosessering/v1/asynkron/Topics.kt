@@ -68,8 +68,8 @@ internal object Topics {
         serDes = SerDes()
     )
 
-    val K9_RAPID_V1 = Topic(
-        name = "k9-rapid-v1",
+    val K9_RAPID_V2 = Topic(
+        name = "k9-rapid-v2",
         serDes = SerDes()
     )
 
@@ -91,7 +91,7 @@ data class CleanupDeleOmsorgsdager(
 class SerDes : Serializer<TopicEntry>, Deserializer<TopicEntry> {
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
     override fun close() {}
-    override fun serialize(topic: String, entry: TopicEntry): ByteArray = when (topic == Topics.K9_RAPID_V1.name) {
+    override fun serialize(topic: String, entry: TopicEntry): ByteArray = when (topic == Topics.K9_RAPID_V2.name) {
         true -> entry.data.rawJson.toByteArray()
         false -> entry.rawJson.toByteArray()
     }

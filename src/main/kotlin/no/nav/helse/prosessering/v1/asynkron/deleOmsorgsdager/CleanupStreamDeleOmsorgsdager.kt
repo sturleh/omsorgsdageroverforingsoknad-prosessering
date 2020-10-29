@@ -38,7 +38,7 @@ internal class CleanupStreamDeleOmsorgsdager(
         private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
             val fraCleanup = Topics.CLEANUP_DELE_OMSORGSDAGER
-            val tilJournalfort= Topics.K9_RAPID_V1
+            val tilJournalfort= Topics.K9_RAPID_V2
 
             builder
                 .stream(fraCleanup.name, fraCleanup.consumed)
