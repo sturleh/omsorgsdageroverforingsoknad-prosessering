@@ -37,15 +37,15 @@
 
         <!-- Overføring -->
         <section id="overføring">
-            <h2>Overføring</h2>
-            <p class="sporsmalstekst">Hvem skal dagene overføres til? </p>
+            <h2>Overføring av omsorgsdager</h2>
+            <p class="sporsmalstekst">Hvem skal omsorgsdagene overføres til? </p>
             <p>{{navnMottaker}} ({{fnrMottaker}})</p>
             <hr />
-            <p class="sporsmalstekst">Hvor mange dager skal overføres?</p>
+            <p class="sporsmalstekst">Hvor mange omsorgsdager skal overføres?</p>
             <p>{{antallDager}}</p>
             <hr />
             {{#if stengingsperiode}}
-                <p class="sporsmalstekst">Hvilken periode gjelder overføringen for?</p>
+                <p class="sporsmalstekst">Fra når gjelder overføringen?</p>
                 <p>{{stengingsperiode}}</p>
             {{/if}}
         </section>
@@ -109,11 +109,11 @@
 
         <!-- SAMTYKKE -->
         <section id="samtykke">
-            <h2>Samtykke</h2>
-            <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
+            <h2>Samtykke fra deg</h2>
+            <p class="sporsmalstekst">Har du forstått dine rettigheter og plikter?</p>
             <p>{{ jaNeiSvar samtykke.harForståttRettigheterOgPlikter }}</p>
             <hr />
-            <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
+            <p class="sporsmalstekst">Har du bekreftet at opplysninger som er gitt er riktige?</p>
             <p>{{ jaNeiSvar samtykke.harBekreftetOpplysninger }}</p>
         </section>
     </div>
