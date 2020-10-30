@@ -8,8 +8,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpPost
-import io.ktor.http.HttpHeaders
-import io.ktor.http.Url
+import io.ktor.http.*
 import no.nav.helse.CorrelationId
 import no.nav.helse.HttpError
 import no.nav.helse.aktoer.AktørId
@@ -62,7 +61,8 @@ class JoarkGateway(
         norskIdent: String,
         mottatt: ZonedDateTime,
         dokumenter: List<List<URI>>,
-        correlationId: CorrelationId
+        correlationId: CorrelationId,
+        navn: Navn
     ): JournalPostId {
 
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(journalforeScopes).asAuthoriationHeader()
@@ -71,7 +71,8 @@ class JoarkGateway(
             aktoerId = aktørId.id,
             norskIdent = norskIdent,
             mottatt = mottatt,
-            dokumenter = dokumenter
+            dokumenter = dokumenter,
+            søkerNavn = navn
         )
 
         val body = objectMapper.writeValueAsBytes(joarkRequest)
@@ -114,8 +115,15 @@ class JoarkGateway(
 private data class JoarkRequest(
     @JsonProperty("aktoer_id") val aktoerId: String,
     @JsonProperty("norsk_ident") val norskIdent: String,
+    @JsonProperty("soker_navn") val søkerNavn: Navn,
     val mottatt: ZonedDateTime,
     val dokumenter: List<List<URI>>
+)
+
+data class Navn(
+    val fornavn: String,
+    val mellomnavn: String? = null,
+    val etternavn: String
 )
 
 data class JournalPostId(@JsonProperty("journal_post_id") val journalpostId: String)
