@@ -12,6 +12,7 @@ import no.nav.helse.prosessering.v1.asynkron.serialiserTilData
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
+import java.time.ZonedDateTime
 
 internal class PreprosesseringStreamDeleOmsorgsdager(
     preprosesseringV1Service: PreprosesseringV1Service,
@@ -39,6 +40,7 @@ internal class PreprosesseringStreamDeleOmsorgsdager(
 
             builder
                 .stream(fromMottatt.name, fromMottatt.consumed)
+                .filter{ _, entry -> !entry.deserialiserTilMeldingDeleOmsorgsdagerV1().mottatt.isBefore(ZonedDateTime.now().minusDays(1))}
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {

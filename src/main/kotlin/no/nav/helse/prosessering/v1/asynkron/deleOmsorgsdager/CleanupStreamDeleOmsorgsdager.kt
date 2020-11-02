@@ -15,6 +15,7 @@ import no.nav.k9.rapid.behov.OverføreOmsorgsdagerBehov
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
+import java.time.ZonedDateTime
 
 
 internal class CleanupStreamDeleOmsorgsdager(
@@ -42,6 +43,7 @@ internal class CleanupStreamDeleOmsorgsdager(
 
             builder
                 .stream(fraCleanup.name, fraCleanup.consumed)
+                .filter{ _, entry -> !entry.deserialiserTilCleanupDeleOmsorgsdager().meldingV1.mottatt.isBefore(ZonedDateTime.now().minusDays(1))}
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .selectKey{ key, value ->
                     value.deserialiserTilCleanupDeleOmsorgsdager().meldingV1.id
